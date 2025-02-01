@@ -84,4 +84,179 @@ GTG GUI framework is suitable for a variety of applications, including:
 - **Variable_Class_Example2.py**
 
 
+# GTG Widgets Usage Examples
+
+
+# Basic Examples
+
+## Button
+```python
+button = GTG.Button(app.root, text="Click Me", command=lambda: print("Button clicked"))
+button.pack()
+```
+
+## Label
+```python
+label = GTG.Label(app.root, text="Hello, World!", fg="white", bg="black")
+label.pack()
+```
+
+## Frame
+```python
+frame = GTG.Frame(app.root, bg="gray")
+frame.pack()
+```
+
+## Canvas
+```python
+canvas = GTG.Canvas(app.root)
+canvas.pack()
+canvas.draw_rectangle(10, 10, 100, 100, fill="red")
+```
+
+## Entry
+```python
+entry = GTG.Entry(app.root)
+entry.pack()
+```
+
+## Toplevel (New Window)
+```python
+toplevel = GTG.Toplevel(app.root, bg="white")
+```
+
+## Scale
+```python
+scale = GTG.Scale(app.root, from_=0, to=100)
+scale.pack()
+```
+
+## MessageBox
+```python
+GTG.showinfo(app.root, "Info", "This is an information message.")
+```
+
+## Spinbox
+```python
+spinbox = GTG.Spinbox(app.root, from_=0, to=10)
+spinbox.pack()
+```
+
+## Menu
+```python
+menu = GTG.Menu(app.root)
+app.root.config(menu=menu)
+file_menu = GTG.Menu(menu)
+menu.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="Exit", command=app.root.quit)
+```
+
+## Radiobutton
+```python
+var = GTG.StringVar()
+radio1 = GTG.Radiobutton(app.root, text="Option 1", variable=var, value="1")
+radio2 = GTG.Radiobutton(app.root, text="Option 2", variable=var, value="2")
+radio1.pack()
+radio2.pack()
+```
+
+## Notebook
+```python
+notebook = GTG.Notebook(app.root)
+notebook.pack()
+frame1 = GTG.Frame(notebook)
+frame2 = GTG.Frame(notebook)
+notebook.add(frame1, text="Tab 1")
+notebook.add(frame2, text="Tab 2")
+```
+
+## Checkbutton
+```python
+check_var = GTG.BooleanVar()
+checkbox = GTG.Checkbutton(app.root, text="Check Me", variable=check_var)
+checkbox.pack()
+```
+
+## Scrollbar
+```python
+scrollbar = GTG.Scrollbar(app.root)
+scrollbar.pack()
+```
+
+## Listbox
+```python
+listbox = GTG.Listbox(app.root)
+listbox.pack()
+listbox.insert(0, "Item 1")
+listbox.insert(1, "Item 2")
+```
+
+## Text
+```python
+text_widget = GTG.Text(app.root)
+text_widget.pack()
+```
+
+## Progressbar
+```python
+progress = GTG.Progressbar(app.root, length=200, mode='determinate')
+progress.pack()
+progress.start()
+```
+
+## OptionMenu
+```python
+option_var = GTG.StringVar()
+option_menu = GTG.OptionMenu(app.root, option_var, "Option 1", "Option 2", "Option 3")
+option_menu.pack()
+```
+
+## PanedWindow
+```python
+paned = GTG.PanedWindow(app.root, orientation='horizontal')
+paned.pack()
+frame1 = GTG.Frame(paned)
+frame2 = GTG.Frame(paned)
+paned.add_pane(frame1)
+paned.add_pane(frame2)
+```
+
+## Variables
+```python
+string_var = GTG.StringVar(value="Hello")
+boolean_var = GTG.BooleanVar(value=True)
+int_var = GTG.IntVar(value=10)
+double_var = GTG.DoubleVar(value=5.5)
+list_var = GTG.ListVar(value=["Item1", "Item2"])
+```
+
+## Custom File Dialog
+```python
+file_dialog = GTG.CustomFileDialog(app.root)
+selected_file = file_dialog.get_file_path()
+```
+
+## Tooltip
+```python
+tooltip = GTG.Tooltip(button, "This is a button")
+```
+
+## Custom Color Picker
+```python
+def color_selected(color):
+    print("Selected Color:", color)
+color_picker = GTG.CustomColorPicker(color_selected)
+color_picker.open_picker()
+```
+
+## Side Panel
+```python
+side_panel = GTG.SidePanel(app.root, width=250, bg="darkgray")
+side_panel._build()
+```
+
+app.RunWindow()
+
+
+
 
