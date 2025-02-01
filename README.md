@@ -1,3 +1,6 @@
+### Note: 
+Everything is a work in progress and some widgets might be buggy and not work as intended 
+
 
 # Custom GUI Framework
 
