@@ -72,7 +72,7 @@ GTG GUI framework is suitable for a variety of applications, including:
 **GTG** is a powerful, flexible, and modern toolkit for building desktop applications in Python. By enhancing Tkinter with hover effects, dynamic variables, and custom styling, it provides an excellent solution for various projects, from simple utilities to interactive applications. 
 
 
-## How to import for GTG_Widgets\
+## How to import from GTG_Widgets\
 ![Screenshot 2025-02-01 181726](https://github.com/user-attachments/assets/6964a7b4-2a09-4b7f-9fc2-4ba4566669f9)
 
 
