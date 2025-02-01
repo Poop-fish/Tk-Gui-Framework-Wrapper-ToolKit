@@ -1,5 +1,5 @@
 ### Note: 
-Everything is a work in progress and some widgets might be buggy and not work as intended.
+Everything is a work in progress and some widgets might be buggy and may not work as intended.
 That being said i am by no means a expert on Gui or frameworks but making projects like this helps me improve my coding skills :) 
 
 
