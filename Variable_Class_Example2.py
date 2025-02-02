@@ -100,15 +100,16 @@ from GTG_Extended_Widgets import FileDialog , SidePanel , Tooltip
 
 #!-------------------------------------------------------------------------------------------------
 
-#! CustomFile Dialog example 
+#! ----------------------------------------  CustomFile Dialog example ----------------------------
+
 root = tk.Tk()
 root.title("Main Window")
 root.geometry("400x300")
 
 def open_file_dialog():
-    # Open the CustomFileDialog when the button is clicked
+    # \\ Open the CustomFileDialog when the button is clicked
     dialog = FileDialog(root)
-    root.wait_window(dialog)  # Wait until the dialog is closed before proceeding
+    root.wait_window(dialog)  #\\  Wait until the dialog is closed before proceeding
     
     file_path = dialog.get_file_path()
     if file_path:
@@ -116,9 +117,8 @@ def open_file_dialog():
     else:
         print("No file selected.")
 
-# Create a button in the main window to open the file dialog
-open_button = tk.Button(root, text="Open File Dialog", command=open_file_dialog)
+# \\ Create a button in the main window to open the file dialog
+open_button = GTG.Button(root, text="Open File Dialog", command=open_file_dialog)
 open_button.pack(pady=20)
 
-# Start the Tkinter event loop
 root.mainloop()
