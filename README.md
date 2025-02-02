@@ -3,7 +3,6 @@ Everything is a work in progress and some widgets might be buggy and may not wor
 That being said i am by no means a expert on Gui or frameworks/ToolKits. 
 Making projects like this helps me improve my coding skills :) 
 
-
 ## Installation
 
 ### Prerequisites
@@ -18,6 +17,10 @@ You can install the required Python packages using pip:
 
 - pip install pillow pygments
 
+if you still having issues just copy all the import and as ChatGPT or google them
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Custom GUI Framework
 
