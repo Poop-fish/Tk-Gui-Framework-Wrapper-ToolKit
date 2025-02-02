@@ -85,10 +85,8 @@ GTG GUI framework is suitable for a variety of applications, including:
 - **Variable_Class_Example2.py**
 
 
-# GTG Widgets Usage Examples
 
-
-# Basic Examples
+# GTG Basic Examples
 
 ## Button
 ```python
