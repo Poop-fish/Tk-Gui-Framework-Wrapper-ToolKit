@@ -254,7 +254,6 @@ side_panel = GTG.SidePanel(app.root, width=250, bg="darkgray")
 side_panel._build()
 ```
 
-app.RunWindow()
 
 
 
