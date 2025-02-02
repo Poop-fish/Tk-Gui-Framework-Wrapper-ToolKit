@@ -3,12 +3,6 @@ Everything is a work in progress and some widgets might be buggy and may not wor
 That being said i am by no means a expert on Gui or frameworks/ToolKits. 
 Making projects like this helps me improve my coding skills :) 
 
-# Project Name
-
-## Description
-A brief description of your project. Explain what it does, its purpose, and any key features.
-
----
 
 ## Installation
 
