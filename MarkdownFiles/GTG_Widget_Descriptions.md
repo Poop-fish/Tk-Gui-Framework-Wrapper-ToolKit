@@ -1,7 +1,7 @@
 # GTG Widget Descriptions
 -------------------------------
 
-## Overview
+## GTG.Button Overview
 This is a custom `Button` class for Tkinter that extends `tk.Button`. It adds hover effects and customizable styles, making it more visually appealing and functional than the default Tkinter button.
 
 ## Features
@@ -102,7 +102,7 @@ This custom Tkinter button class improves the default `Button` widget by adding 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-## Overview
+## GTG.Label Overview
 
 The `Label` class is a subclass of `tk.Label` that introduces additional features such as hover effects and customizable styling. It allows developers to easily configure the appearance of labels in a `tkinter` application, including background color, text color, font, padding, and more.
 
