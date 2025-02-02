@@ -50,6 +50,20 @@ GTG Gui framework includes the following custom widgets:
 - **Progressbar:** Progress bars with customizable colors and styles.
 - **SidePanel:** A collapsible side panel with drag-and-drop functionality for the toggle button and you can add widgets to it.
 
+
+## Extended GTG Widgets Made Directly With GTG : ![Screenshot 2025-02-02 145336](https://github.com/user-attachments/assets/2e32680e-557d-4ef0-adf7-ecc9cca8b0f9)
+
+this section showcases custom widgets and applications made with the **GTG** GUI framework, which allows you to create robust and highly customizable graphical user interfaces **(GUIs)**. These widgets extend the basic functionality of the **GTG** library, providing additional interactive features, ease of use, and intuitive interfaces for various applications.
+
+### Key Features:
+**FileDialog:** A file picker dialog that allows users to browse their file system, select files, and navigate directories. It includes an "Up" button for easy navigation and a double-click feature for directory exploration. This widget is designed to integrate seamlessly with your applications for file selection tasks.
+
+**Tooltip:** A customizable tooltip that can be attached to any widget. The tooltip appears after a specified delay when the user hovers over a widget, providing helpful information or hints. It's highly customizable in terms of font, colors, border styles, and more, allowing you to adjust it to fit your app's design.
+
+**SidePanel:** A collapsible side panel that can slide in and out of view. It includes a toggle button for panel visibility, a drag-and-drop feature for re-positioning, and smooth animation during panel transitions. Perfect for creating dynamic layouts that need side menus or navigation panels.
+
+These widgets can be easily integrated into any project that uses the GTG framework, providing enhanced functionality and creating more intuitive user interfaces. Whether you're building a simple file picker, a helpful tooltip system, or a dynamic side panel, these custom widgets will elevate the quality and interactivity of your GUI application.
+
   
 ## 3. Advanced Features
 - **Dynamic Variables:** Custom variable classes (e.g., `StringVar`, `IntVar`, `BooleanVar`, `DateTimeVar`, etc.) for dynamic updates and data binding.
