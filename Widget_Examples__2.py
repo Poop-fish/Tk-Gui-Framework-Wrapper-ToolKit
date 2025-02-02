@@ -1,6 +1,7 @@
-from GTG_Widgets import GTG , SidePanel
+from GTG_Widgets import GTG
 from GTG_DateTime_Module import *
 from GTG_imports import *
+from GTG_Extended_Widgets import FileDialog , SidePanel , Tooltip
 
 
 # #!------------ || Hover Tooltip Widget Example ||----------------------
@@ -12,22 +13,22 @@ from GTG_imports import *
 # button.pack(pady=20)
 
 # # \\ Attach a tooltip to the button
-# tooltip = GTG.Tooltip(
+# tooltip = GT.Tooltip(
 #     button,
 #     text="This is a tooltip!",
-#     delay=500,  # Tooltip appears after 500ms
-#     bg="#ffffe0",  # Light yellow background
-#     fg="black",  # Black text
-#     font=("Arial", 10),  # Font style and size
-#     borderwidth=1,  # Border width
-#     relief="solid"  # Border style
+#     delay=500,  # \\ Tooltip appears after 500ms
+#     bg="#ffffe0",  # \\ Light yellow background
+#     fg="black",  # \\ Black text
+#     font=("Arial", 10),  # \\ Font style and size
+#     borderwidth=1,  # \\ Border width
+#     relief="solid"  # \\ Border style
 # )
 
 # entry = GTG.Entry(root)
 # entry.pack(pady=20)
 
 # # \\ Attach a tooltip to the entry widget
-# entry_tooltip = GTG.Tooltip(
+# entry_tooltip = GT.Tooltip(
 #     entry,
 #     text="Enter some text here.",
 #     bg="lightblue",
@@ -38,7 +39,7 @@ from GTG_imports import *
 # root.mainloop() 
 
 
-# #!------------ || Side Panel Widget Example ||----------------------
+#!------------ || Side Panel Widget Example ||----------------------
 
 # root = tk.Tk()
 # root.title("Side Panel Example")
@@ -67,32 +68,57 @@ from GTG_imports import *
 # root.mainloop() 
 
 
-#!------------ || Paned Window Widget Example ||----------------------
+# #!------------ || Paned Window Widget Example ||----------------------
 
+# root = tk.Tk()
+# root.geometry("400x300")
+
+# #* \\ Example: Create and Pack PanedWindow to a tkinter window
+# paned_window = GTG.PanedWindow(root, sash_color="blue", hover_sash_color="red", orientation="vertical")
+# paned_window.pack(fill=tk.BOTH, expand=True)
+
+# #* \\ Example: Add panes
+# frame1 = GTG.Frame(paned_window, bg="lightblue")
+# frame2 = GTG.Frame(paned_window, bg="lightgreen")
+# frame3 = GTG.Frame(paned_window, bg="lightcoral")
+# #* \\ Build function for panes
+# paned_window.add_pane(frame1)
+# paned_window.add_pane(frame2)
+# paned_window.add_pane(frame3)
+
+# #* \\ Example: Add some widgets to the frames
+# label1 = GTG.Label(frame1, text="Test Text 1", font=("Arial", 14))
+# label1.pack(pady=20)
+
+# label2 = GTG.Label(frame2, text="Test Text 2", font=("Arial", 14))
+# label2.pack(pady=20)
+
+# label3 = GTG.Label(frame3, text="Test Text 3", font=("Arial", 14))
+# label3.pack(pady=20)
+
+# root.mainloop() 
+
+#!-------------------------------------------------------------------------------------------------
+
+#! CustomFile Dialog example 
 root = tk.Tk()
+root.title("Main Window")
 root.geometry("400x300")
 
-#* \\ Example: Create and Pack PanedWindow to a tkinter window
-paned_window = GTG.PanedWindow(root, sash_color="blue", hover_sash_color="red", orientation="vertical")
-paned_window.pack(fill=tk.BOTH, expand=True)
+def open_file_dialog():
+    # Open the CustomFileDialog when the button is clicked
+    dialog = FileDialog(root)
+    root.wait_window(dialog)  # Wait until the dialog is closed before proceeding
+    
+    file_path = dialog.get_file_path()
+    if file_path:
+        print(f"Selected file: {file_path}")
+    else:
+        print("No file selected.")
 
-#* \\ Example: Add panes
-frame1 = GTG.Frame(paned_window, bg="lightblue")
-frame2 = GTG.Frame(paned_window, bg="lightgreen")
-frame3 = GTG.Frame(paned_window, bg="lightcoral")
-#* \\ Build function for panes
-paned_window.add_pane(frame1)
-paned_window.add_pane(frame2)
-paned_window.add_pane(frame3)
+# Create a button in the main window to open the file dialog
+open_button = tk.Button(root, text="Open File Dialog", command=open_file_dialog)
+open_button.pack(pady=20)
 
-#* \\ Example: Add some widgets to the frames
-label1 = GTG.Label(frame1, text="Test Text 1", font=("Arial", 14))
-label1.pack(pady=20)
-
-label2 = GTG.Label(frame2, text="Test Text 2", font=("Arial", 14))
-label2.pack(pady=20)
-
-label3 = GTG.Label(frame3, text="Test Text 3", font=("Arial", 14))
-label3.pack(pady=20)
-
-root.mainloop() 
+# Start the Tkinter event loop
+root.mainloop()
