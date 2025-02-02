@@ -1,5 +1,4 @@
-# GTG Widget Descriptions 
-------------------------------------------------
+# GTG Widget Descriptions
 
 ## GTG.Button Overview
 This is a custom `Button` class for Tkinter that extends `tk.Button`. It adds hover effects and customizable styles, making it more visually appealing and functional than the default Tkinter button.
@@ -97,14 +96,14 @@ When creating a button, you can pass the following parameters:
 - `toggle_text(new_text)`: Updates the button's text.
 
 ## Conclusion
-This custom Tkinter button class improves the default `Button` widget by adding hover effects and customization options, making it more interactive and visually appealing 
+My custom Tkinter button class improves the default `Button` widget by adding hover effects and customization options, making it more interactive and visually appealing 
 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## GTG.Label Overview
 
-The `Label` class is a subclass of `tk.Label` that introduces additional features such as hover effects and customizable styling. It allows developers to easily configure the appearance of labels in a `tkinter` application, including background color, text color, font, padding, and more.
+The `GTG.Label` class is a subclass of `tk.Label` that introduces additional features such as hover effects and customizable styling. It allows developers to easily configure the appearance of labels in a `tkinter` application, including background color, text color, font, padding, and more.
 
 
 ## Class Definition
@@ -233,7 +232,7 @@ root.mainloop()
 
 
 ### Conclusion
-The Label class provides a flexible and reusable way to create custom labels with hover effects in tkinter applications. By allowing customization of various properties, it simplifies the process of creating visually appealing user interfaces. 
+My  Label class provides a flexible and reusable way to create custom labels with hover effects in tkinter applications. By allowing customization of various properties, it simplifies the process of creating visually appealing user interfaces. 
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -242,7 +241,7 @@ The Label class provides a flexible and reusable way to create custom labels wit
 
 ## GTG.Frame Overview
 
-The `Frame` class is a subclass of `tk.Frame` that introduces additional features such as hover effects, customizable padding, border width, and smooth color transitions. It allows developers to create visually appealing and interactive frames in a `tkinter` application.
+`GTG.Frame` class is a subclass of `tk.Frame` that introduces additional features such as hover effects, customizable padding, border width, and smooth color transitions. It allows developers to create visually appealing and interactive frames in a `tkinter` application.
 
 ---
 
@@ -256,7 +255,7 @@ class Frame(tk.Frame):
                  animation_speed=10, **kwargs):
         super().__init__(parent, **kwargs)
         
-        # Default values
+        # \\ Default values
         self.default_bg = "#d9d9d9"
         self.default_highlight = "#a0a0a0"
         self.default_hover_bg = "#c0c0c0"
@@ -266,7 +265,7 @@ class Frame(tk.Frame):
         self.default_pady = 0
         self.default_cursor = "arrow"
         
-        # Customizable properties
+        # \\ Customizable properties
         self.bg_color = bg if bg is not None else self.default_bg
         self.highlight_color = highlightbackground if highlightbackground is not None else self.default_highlight
         self.hover_bg = hover_bg if hover_bg is not None else self.default_hover_bg
@@ -283,7 +282,7 @@ class Frame(tk.Frame):
     
         self.configure_frame()
         
-        # Bind hover events if enabled
+        # \\ Bind hover events if enabled
         if self.enable_hover:
             self.bind("<Enter>", self.on_hover)
             self.bind("<Leave>", self.on_leave)
@@ -404,7 +403,7 @@ This helper method interpolates between two colors based on the current step of 
 ```python
 root = tk.Tk()
 
-# Create a custom frame with hover effect
+# \\ Create a custom frame with hover effect
 frame = Frame(
     root,
     enable_hover=True,
@@ -425,8 +424,372 @@ frame.pack(pady=20, padx=20)
 
 root.mainloop()
 ```
-
 ***In this example, the frame will smoothly transition its colors, padding, and border width when the mouse hovers over it.***
 
 ## Conclusion
-The Frame class provides a flexible and reusable way to create custom frames with hover effects and smooth animations in tkinter applications. By allowing customization of various properties, it simplifies the process of creating visually appealing and interactive user interfaces.
+My `GTG.Frame` class provides a flexible and reusable way to create custom frames with hover effects and smooth animations in `tkinter` applications. By allowing customization of various properties, it simplifies the process of creating visually appealing and interactive user interfaces. 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+## GTG.Canvas Overview
+
+`GTG.Canvas` class is a subclass of `tk.Canvas` that introduces additional features such as hover effects and helper methods for drawing rectangles and text. It allows developers to create interactive and visually appealing canvases in a `tkinter` application.
+
+---
+
+## Class Definition
+
+```python
+class Canvas(tk.Canvas):
+    def __init__(self, parent, enable_hover=True, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.enable_hover = enable_hover
+        self.configure(
+            bg="#d9d9d9",  
+            bd=5,           
+            relief="ridge", 
+            width=400,      
+            height=400      
+        )
+        if self.enable_hover:
+            self.bind("<Enter>", self.on_hover)
+            self.bind("<Leave>", self.on_leave)
+    
+    def on_hover(self, event):
+        if self.enable_hover:
+            self.configure(bg="#c0c0c0")  
+
+    def on_leave(self, event):
+        if self.enable_hover:
+            self.configure(bg="#d9d9d9")  
+
+    def draw_rectangle(self, x1, y1, x2, y2, **kwargs):
+        """Draws a rectangle on the canvas."""
+        return self.create_rectangle(x1, y1, x2, y2, **kwargs)
+
+    def draw_text(self, x, y, text, **kwargs):
+        """Draws text on the canvas."""
+        return self.create_text(x, y, text=text, **kwargs) 
+``` 
+
+## Class Properties
+
+### Default Configuration
+
+The Canvas class is initialized with the following default configuration:
+
+`bg:` Background color (#d9d9d9).
+
+`bd:` Border width (5).
+
+`relief:` Border relief style (ridge).
+
+`width:` Canvas width (400).
+
+`height:` Canvas height (400).
+
+## Hover Effect
+`enable_hover` parameter determines whether the hover effect is enabled. If `True`, the canvas's background color will change when the mouse hovers over it. 
+
+
+## Methods
+`__init__`
+
+The constructor method initializes the Canvas object. It sets up the canvas with default properties and binds hover events if enable_hover is True.
+
+`on_hover`
+
+This method is triggered when the mouse enters the canvas's area. It changes the background color to the hover color (#c0c0c0) if hover effects are enabled.
+
+`on_leave`
+
+This method is triggered when the mouse leaves the canvas's area. It reverts the background color to the default color (#d9d9d9) if hover effects are enabled.
+
+`draw_rectangle`
+
+This method draws a rectangle on the canvas. It accepts the coordinates of the rectangle (x1, y1, x2, y2) and additional keyword arguments for customization (e.g., fill color, outline color).
+
+`draw_text`
+
+This method draws text on the canvas. It accepts the coordinates (x, y), the text to display, and additional keyword arguments for customization (e.g., font, fill color). 
+
+
+
+## Usage Example
+
+```python
+root = tk.Tk()
+
+# \\ Create a custom canvas with hover effect
+canvas = Canvas(root, enable_hover=True)
+canvas.pack(pady=20, padx=20)
+
+# \\ Draw a rectangle on the canvas
+canvas.draw_rectangle(50, 50, 150, 150, fill="lightblue", outline="blue")
+
+# \\ Draw text on the canvas
+canvas.draw_text(100, 100, text="Hello, Canvas!", font=("Arial", 14), fill="darkblue")
+
+root.mainloop() 
+```
+**In this example:**
+**The canvas will change its background color when the mouse hovers over it.**
+**A rectangle and text are drawn on the canvas using the draw_rectangle and draw_text methods.** 
+
+
+## Conclusion
+`GTG.Canvas` class provides a flexible and reusable way to create custom canvases with hover effects and helper methods for drawing shapes and text in `tkinter` applications. By allowing customization of properties and providing intuitive methods, it simplifies the process of creating interactive and visually appealing user interfaces 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+
+## GTG.Entry Overview
+`GTG.Entry` widget extends the standard `tk.Entry` in Tkinter to provide hover effects. It allows users to define background and foreground colors that change when the mouse enters and leaves the widget.
+
+## Features
+- **Customizable Hover Effects**: Supports changing the background, foreground, highlight background, and highlight color on hover.
+- **Retains Default Styles**: Stores the original styles and restores them when the mouse leaves.
+- **Toggle Hover Effects**: The hover functionality can be enabled or disabled using the `enable_hover` parameter.
+
+## Implementation
+```python
+import tkinter as tk
+
+class Entry(tk.Entry):
+    def __init__(self, parent, enable_hover=True, **kwargs):
+        self.hover_bg = kwargs.pop("hover_bg", None)
+        self.hover_fg = kwargs.pop("hover_fg", None)
+        self.hover_highlightbackground = kwargs.pop("hover_highlightbackground", None)
+        self.hover_highlightcolor = kwargs.pop("hover_highlightcolor", None)
+
+        super().__init__(parent, **kwargs)
+
+        # Store default styles
+        self.default_bg = self.cget("bg")
+        self.default_fg = self.cget("fg")
+        self.default_highlightbackground = self.cget("highlightbackground")
+        self.default_highlightcolor = self.cget("highlightcolor")
+
+        # Enable hover effects
+        self.enable_hover = enable_hover
+        if self.enable_hover:
+            self.bind("<Enter>", self.on_hover)
+            self.bind("<Leave>", self.on_leave)
+
+    def on_hover(self, event):
+        if self.enable_hover:
+            if self.hover_bg:
+                self.configure(bg=self.hover_bg)
+            if self.hover_fg:
+                self.configure(fg=self.hover_fg)
+            if self.hover_highlightbackground:
+                self.configure(highlightbackground=self.hover_highlightbackground)
+            if self.hover_highlightcolor:
+                self.configure(highlightcolor=self.hover_highlightcolor)
+
+    def on_leave(self, event):
+        if self.enable_hover:
+            self.configure(
+                bg=self.default_bg,
+                fg=self.default_fg,
+                highlightbackground=self.default_highlightbackground,
+                highlightcolor=self.default_highlightcolor
+            )
+```
+
+## Usage Example
+```python
+root = tk.Tk()
+entry = Entry(root, hover_bg="lightgray", hover_fg="blue", enable_hover=True)
+entry.pack(pady=10)
+root.mainloop()
+```
+
+## Customization Options
+The widget accepts the following optional hover-related parameters:
+- `hover_bg`: Background color on hover.
+- `hover_fg`: Foreground (text) color on hover.
+- `hover_highlightbackground`: Border highlight color on hover.
+- `hover_highlightcolor`: Highlight color inside the entry on hover.
+- `enable_hover`: Boolean flag to enable or disable hover effects.
+
+## Conclusion
+The enhanced `GTG.Entry` widget provides a simple yet effective way to add hover effects in Tkinter applications. It improves user interaction and allows for easy customization.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+
+## GTG.Toplevel Overview
+My custom `GTG.Toplevel` widget extends Tkinter's standard `tk.Toplevel` to provide hover effects. It modifies the window's background and highlight colors when the mouse enters and leaves.
+
+## Features
+- **Customizable Hover Effects**: Changes background and highlight colors on hover.
+- **Styled Appearance**: Default ridge border with a custom background and highlight.
+- **Toggle Hover Effects**: Can be enabled or disabled with the `enable_hover` parameter.
+
+## Implementation
+```python
+import tkinter as tk
+
+class Toplevel(tk.Toplevel):
+    def __init__(self, parent, enable_hover=True, **kwargs):
+        super().__init__(parent, **kwargs)
+
+        self.default_bg = "#7f7f7f"
+        self.default_highlight = "#a0a0a0"
+        
+        self.configure(
+            bg=self.default_bg, 
+            relief="ridge", 
+            borderwidth=10, 
+            highlightthickness=2,
+            highlightbackground=self.default_highlight
+        )
+
+        self.enable_hover = enable_hover
+
+        if self.enable_hover:
+            self.bind("<Enter>", self.on_hover)
+            self.bind("<Leave>", self.on_leave)
+
+    def on_hover(self, event):
+        """Hover effect: Change background color on mouse enter"""
+        if self.enable_hover:
+            self.configure(bg="#e0e0e0", highlightbackground="#808080")
+
+    def on_leave(self, event):
+        """Reset background color when mouse leaves"""
+        if self.enable_hover:
+            self.configure(bg=self.default_bg, highlightbackground=self.default_highlight)
+```
+
+## Usage Example
+```python
+root = tk.Tk()
+top = Toplevel(root, enable_hover=True)
+top.geometry("300x200")
+root.mainloop()
+```
+
+## Customization Options
+The widget supports the following optional parameters:
+- `enable_hover`: Boolean flag to enable or disable hover effects.
+
+## Conclusion
+`GTG.Toplevel` widget enhances the default Tkinter window by adding hover effects, improving the user interface with interactive visual feedback.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+
+## Overview
+`GTG.Scale` widget extends Tkinter's `tk.Scale` by adding hover and click effects. It also allows dynamic customization of colors and orientation.
+
+## Features
+- **Hover Effects**: Changes background and highlight color when the mouse hovers over the widget.
+- **Click Effects**: Adjusts background and highlight color when clicked.
+- **Customizable Appearance**: Supports dynamic modification of colors and orientation.
+- **Toggle Value Display**: Allows enabling or disabling the display of the current value.
+
+## Implementation
+```python
+import tkinter as tk
+
+class MyScale(tk.Scale):
+    def __init__(self, parent, enable_hover=True, enable_click_effect=True, show_value=True, **kwargs):
+        super().__init__(parent, **kwargs)
+
+        self.default_bg = "#d9d9d9"
+        self.default_fg = "black"
+        self.default_highlight = "#a0a0a0"
+        self.hover_bg = "#e0e0e0"
+        self.hover_highlight = "#808080"
+        self.click_bg = "#c0c0c0"
+        self.click_highlight = "#606060"
+
+        self.configure(
+            bg=self.default_bg,
+            fg=self.default_fg,
+            relief="ridge",
+            troughcolor="#cccccc",
+            highlightthickness=2,
+            highlightbackground=self.default_highlight,
+            font=("Arial", 12),
+            sliderrelief="raised",
+            sliderlength=20,
+            orient=tk.HORIZONTAL,
+            showvalue=show_value  
+        )
+
+        self.enable_hover = enable_hover
+        self.enable_click_effect = enable_click_effect
+
+        if self.enable_hover:
+            self.bind("<Enter>", self.on_hover)
+            self.bind("<Leave>", self.on_leave)
+
+        if self.enable_click_effect:
+            self.bind("<ButtonPress-1>", self.on_click)
+            self.bind("<ButtonRelease-1>", self.on_release)
+
+    def on_hover(self, event):
+        self.configure(bg=self.hover_bg, highlightbackground=self.hover_highlight)
+
+    def on_leave(self, event):
+        self.configure(bg=self.default_bg, highlightbackground=self.default_highlight)
+
+    def on_click(self, event):
+        self.configure(bg=self.click_bg, highlightbackground=self.click_highlight)
+
+    def on_release(self, event):
+        if self.enable_hover:
+            self.configure(bg=self.hover_bg, highlightbackground=self.hover_highlight)
+        else:
+            self.configure(bg=self.default_bg, highlightbackground=self.default_highlight)
+
+    def set_orientation(self, orientation):
+        """Set the orientation of the Scale (horizontal or vertical)"""
+        self.configure(orient=orientation)
+
+    def set_colors(self, bg=None, fg=None, troughcolor=None, hover_bg=None, hover_highlight=None, click_bg=None, click_highlight=None):
+        """Customize the colors of the Scale"""
+        if bg:
+            self.default_bg = bg
+            self.configure(bg=bg)
+        if fg:
+            self.default_fg = fg
+            self.configure(fg=fg)
+        if troughcolor:
+            self.configure(troughcolor=troughcolor)
+        if hover_bg:
+            self.hover_bg = hover_bg
+        if hover_highlight:
+            self.hover_highlight = hover_highlight
+        if click_bg:
+            self.click_bg = click_bg
+        if click_highlight:
+            self.click_highlight = click_highlight
+
+    def toggle_value_display(self, show_value):
+        """Toggle the display of the slider's value"""
+        self.configure(showvalue=show_value)
+```
+
+## Usage Example
+```python
+root = tk.Tk()
+scale = MyScale(root, enable_hover=True, enable_click_effect=True)
+scale.pack(pady=10)
+root.mainloop()
+```
+
+## Customization Options
+The widget allows customization of the following properties:
+- **Hover and Click Colors**: Modify background and highlight colors for different states.
+- **Orientation**: Switch between horizontal and vertical scale.
+- **Value Display**: Toggle the display of the scale's value.
+
+## Conclusion
+`GTG.Scale` widget enhances the standard `tk.Scale` by adding interactive hover and click effects, making it more visually responsive and customizable.
