@@ -42,6 +42,7 @@ class GTG:
             widget = widget_class(self.root, *args, **kwargs)
             widget.pack(pady=10)
             return widget
+#! -------------------------------------------------------------------------------------------------------------------------
 
 
 #! ----------------------------------- Start of Main Widgets ----------------------------------------------------------------      
@@ -94,7 +95,7 @@ class GTG:
             """Change the button's text."""
             self.config(text=new_text)
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class Label(tk.Label):
         def __init__(self, parent, enable_hover=True, bg=None, fg=None, **kwargs):
             super().__init__(parent, **kwargs)
@@ -126,7 +127,7 @@ class GTG:
             if self.enable_hover:
                 self.configure(bg=self.bg)   
     
-    
+#! -------------------------------------------------------------------------------------------------------------------------   
     class Frame(tk.Frame):
         def __init__(self, parent, enable_hover=False, bg=None, highlightbackground=None, relief="ridge", **kwargs):
             super().__init__(parent, **kwargs)
@@ -165,7 +166,7 @@ class GTG:
             if self.enable_hover:
                 self.configure(bg=self.bg_color, highlightbackground=self.highlight_color)
 
-    
+#! -------------------------------------------------------------------------------------------------------------------------  
     class Canvas(tk.Canvas):
         def __init__(self, parent, enable_hover=True, **kwargs):
             super().__init__(parent, **kwargs)
@@ -196,7 +197,7 @@ class GTG:
         def draw_text(self, x, y, text, **kwargs):
             """Draws text on the canvas."""
             return self.create_text(x, y, text=text, **kwargs)
-    
+#! -------------------------------------------------------------------------------------------------------------------------   
     
     class Entry(tk.Entry):
         def __init__(self, parent, enable_hover=True, **kwargs):
@@ -225,7 +226,7 @@ class GTG:
             if self.enable_hover:
                 self.configure(highlightbackground="#a0a0a0", highlightcolor="#808080") 
     
-
+#! -------------------------------------------------------------------------------------------------------------------------
     
     class Toplevel(tk.Toplevel):
         def __init__(self, parent, enable_hover=True, **kwargs):
@@ -258,7 +259,7 @@ class GTG:
             if self.enable_hover:
                 self.configure(bg=self.default_bg, highlightbackground=self.default_highlight)
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class Scale(tk.Scale):
         def __init__(self, parent, enable_hover=True, enable_click_effect=True, show_value=True, **kwargs):
             super().__init__(parent, **kwargs)
@@ -338,7 +339,7 @@ class GTG:
             """Toggle the display of the slider's value"""
             self.configure(showvalue=show_value)
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class MessageBox(tk.Toplevel):
         def __init__(self, parent, title, message, message_type="info", buttons=["OK"], **kwargs):
             super().__init__(parent, **kwargs)
@@ -400,7 +401,7 @@ class GTG:
         dialog = GTG.MessageBox(parent, title, message, buttons=["OK", "Cancel"])
         return dialog.on_button_click("OK") if dialog.on_button_click("OK") else False
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class Spinbox(tk.Spinbox):
         def __init__(self, parent, enable_hover=True, **kwargs):
             super().__init__(parent, **kwargs)
@@ -424,7 +425,7 @@ class GTG:
             if self.enable_hover:
                 self.configure(bg="white")
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class Menu(tk.Menu):
         def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, **kwargs):
             super().__init__(parent, **kwargs)
@@ -482,7 +483,7 @@ class GTG:
             """Add a radiobutton to the menu."""
             super().add_radiobutton(label=label, command=command, **kwargs) 
     
-    
+#! -------------------------------------------------------------------------------------------------------------------------   
     class Radiobutton(tk.Radiobutton):
         def __init__(self, parent, text, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, **kwargs):
             super().__init__(parent, text=text, **kwargs)
@@ -519,7 +520,7 @@ class GTG:
             if self.enable_hover:
                 self.configure(bg=self.bg, fg=self.fg)
     
-    
+#! -------------------------------------------------------------------------------------------------------------------------   
     class Notebook(ttk.Notebook):
         def __init__(self, parent, enable_hover=True, **kwargs):
             super().__init__(parent, **kwargs)
@@ -540,7 +541,7 @@ class GTG:
             if self.enable_hover:
                 self.style.configure("Custom.TNotebook", background="#7f7f7f")
     
-    
+#! -------------------------------------------------------------------------------------------------------------------------   
     class Checkbutton(tk.Checkbutton):
         def __init__(self, parent, enable_hover=True, bg=None, fg=None, selectcolor=None, **kwargs):
             super().__init__(parent, **kwargs)
@@ -575,7 +576,7 @@ class GTG:
         def on_leave(self, event):
             if self.enable_hover:
                 self.configure(bg=self.bg)
-    
+#! -------------------------------------------------------------------------------------------------------------------------    
     
     class Scrollbar(tk.Scrollbar):
         def __init__(self, parent, **kwargs):
@@ -586,7 +587,7 @@ class GTG:
                 relief="flat",
                 borderwidth=2
         )
-    
+#! -------------------------------------------------------------------------------------------------------------------------    
     
     class Listbox(tk.Listbox):
         
@@ -623,7 +624,7 @@ class GTG:
             if self.enable_hover:
                 self.configure(bg=self.bg)
     
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class Text(tk.Text):
         def __init__(self, parent, enable_hover=True, **kwargs):
             super().__init__(parent, **kwargs)
@@ -654,7 +655,7 @@ class GTG:
             if self.enable_hover:
                 self.configure(highlightbackground="#a0a0a0", highlightcolor="#808080") 
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class Progressbar(ttk.Progressbar):
         def __init__(self, parent, length=200, mode="determinate", **kwargs):
             super().__init__(parent, length=length, mode=mode, **kwargs)
@@ -672,7 +673,7 @@ class GTG:
                 lightcolor="#c0c0c0",
                 darkcolor="#808080"
             ) 
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class OptionMenu(tk.OptionMenu):
         def __init__(self, parent, variable, *options, enable_hover=True, bg="#7f7f7f", fg="black", hover_bg="light gray", hover_fg="white", font=("Arial", 12), **kwargs):
             super().__init__(parent, self.variable, *self.options, **kwargs)
@@ -745,7 +746,7 @@ class GTG:
             """
             self.variable.trace_add("write", lambda *args: callback(self.variable.get()))
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
 
     class PanedWindow(ttk.PanedWindow):
         def __init__(self, parent, enable_hover=True, orientation="horizontal", sash_color=None, hover_sash_color=None, **kwargs):
@@ -860,7 +861,7 @@ class GTG:
 
         def set_value(self, new_value):
             self.set(new_value)
-    
+#! -------------------------------------------------------------------------------------------------------------------------   
     
     class BooleanVar(tk.BooleanVar):
         def __init__(self, value=False, callback=None, **kwargs):
@@ -882,7 +883,7 @@ class GTG:
         def set_value(self, new_value):
             self.set(bool(new_value))
     
-   
+ #! -------------------------------------------------------------------------------------------------------------------------  
     class ListVar(tk.Variable):
         def __init__(self, value=None, callback=None, **kwargs):
             super().__init__(**kwargs)
@@ -917,7 +918,7 @@ class GTG:
                 self._value.remove(item)  
                 self.set(str(self._value))  
 
-    
+#! -------------------------------------------------------------------------------------------------------------------------   
     class IntVar(tk.IntVar):
         def __init__(self, value=0, callback=None, **kwargs):
             super().__init__(**kwargs)
@@ -937,8 +938,7 @@ class GTG:
 
         def set_value(self, new_value):
             self.set(int(new_value))
-
-    
+ #! -------------------------------------------------------------------------------------------------------------------------   
     class DoubleVar(tk.DoubleVar):
         def __init__(self, value=0.0, callback=None, **kwargs):
             super().__init__(**kwargs)
@@ -959,7 +959,7 @@ class GTG:
         def set_value(self, new_value):
             self.set(float(new_value)) 
 
-    
+#! -------------------------------------------------------------------------------------------------------------------------   
     class FileVar(tk.Variable):
         def __init__(self, value=None, callback=None, **kwargs):
             super().__init__(**kwargs)
@@ -984,7 +984,7 @@ class GTG:
                 raise ValueError("Value must be a file path string")
             self.set(new_value)
     
-    
+#! -------------------------------------------------------------------------------------------------------------------------    
     class DateTimeVar(tk.Variable):
         def __init__(self, value=None, callback=None, **kwargs):
             super().__init__(**kwargs)
@@ -1009,7 +1009,7 @@ class GTG:
                 raise ValueError("Value must be a datetime object")
             self.set(new_value)
     
-    
+#! -------------------------------------------------------------------------------------------------------------------------    
     class ColorVar(tk.Variable):
         def __init__(self, value=None, callback=None, **kwargs):
             super().__init__(**kwargs)
@@ -1034,7 +1034,7 @@ class GTG:
                 raise ValueError("Value must be a hex color code (e.g., '#RRGGBB')")
             self.set(new_value)
    
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class EnumVar(tk.StringVar):
         def __init__(self, value=None, enum_type=None, callback=None, **kwargs):
             super().__init__(**kwargs)
@@ -1062,6 +1062,7 @@ class GTG:
                 raise ValueError(f"Value must be one of {[e.value for e in self.enum_type]}")
             self.set(new_value)
 
+#! ------------------------------------------------------------------------------------------------------------------------- 
 
 #! need to look this Var over and clean it up 
     class ValueErrorVar(tk.Variable):
@@ -1174,7 +1175,7 @@ class GTG:
         def get_file_path(self):
             return self.file_path
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
     class Tooltip:
         def __init__(self, widget, text, delay=500, bg="#ffffe0", fg="black", font=("Arial", 10), borderwidth=1, relief="solid"):
             """
@@ -1415,7 +1416,7 @@ class CustomColorPicker:
             self.update_crosshair_position(x, y, canvas)
             self.on_color_pick(event, canvas) 
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
 class SidePanel:
     def __init__(self, root, width=200, height=500, x=0, y=0, bg="gray", open_state=True, Frame="raised"):
         self.root = root
@@ -1487,3 +1488,4 @@ class SidePanel:
 
     def stop_drag(self, event):
         self.dragging = False 
+#! -------------------------------------------------------------------------------------------------------------------------
