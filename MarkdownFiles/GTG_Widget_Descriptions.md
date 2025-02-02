@@ -1,4 +1,5 @@
-# Custom Tkinter Button
+# GTG Widget Descriptions
+------------------------------------------------
 
 ## Overview
 This is a custom `Button` class for Tkinter that extends `tk.Button`. It adds hover effects and customizable styles, making it more visually appealing and functional than the default Tkinter button.
