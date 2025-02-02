@@ -2,50 +2,9 @@ from GTG_imports import tk , ttk
 from GTG_imports import *
 from datetime import datetime
 from GTG_DateTime_Module import *
+
 class GTG:
-#! ------------------------  init / Main Window -------------------------------------------------------------    
-    class MainWindow():
-        def __init__(self, title="GTG Application", width=800, height=600):
-            self.root = tk.Tk()
-            self.root.title(title)
-            self.root.geometry(f"{width}x{height}")
-            self.root.configure(bg="#2b2b2b")
-
-            #* \\ Main frame to hold widgets \\
-            self.main_frame = GTG.Frame(self.root, bg="#2b2b2b" , enable_hover=False , relief="flat")
-            self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
-
-        def RunWindow(self):
-            """Start the main event loop."""
-            self.root.mainloop()
-        
-        def add_widget(self, widget_class, *args, **kwargs):
-            """
-            Add a widget to the main frame.
-            
-            Parameters:
-            - widget_class: The class of the widget to be added.
-            - *args, **kwargs: Additional arguments to pass to the widget constructor.
-            """
-            widget = widget_class(self.main_frame, *args, **kwargs)
-            widget.pack(pady=10)
-            return widget
-        
-        def root_widget(self, widget_class, *args, **kwargs):
-            """
-            Add a widget directly to the root window.
-            
-            Parameters:
-            - widget_class: The class of the widget to be added.
-            - *args, **kwargs: Additional arguments to pass to the widget constructor.
-            """
-            widget = widget_class(self.root, *args, **kwargs)
-            widget.pack(pady=10)
-            return widget
-#! -------------------------------------------------------------------------------------------------------------------------
-
-
-#! ----------------------------------- Start of Main Widgets ----------------------------------------------------------------      
+#! ----------------------------------- Start of Main Widgets (tk ,ttk) ----------------------------------------------------------------      
     
     class Button(tk.Button): 
         def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, frame=None, **kwargs):
@@ -246,12 +205,16 @@ class GTG:
                 int(start[5:7], 16) + int(delta[2] * step)
             )
 #! -------------------------------------------------------------------------------------------------------------------------  
+
+
     class Canvas(tk.Canvas):
-        def __init__(self, parent, enable_hover=True, **kwargs):
+        def __init__(self, parent, enable_hover=False, hover_bg="#c0c0c0", default_bg="#d9d9d9", **kwargs):
             super().__init__(parent, **kwargs)
             self.enable_hover = enable_hover
+            self.hover_bg = hover_bg
+            self.default_bg = default_bg
             self.configure(
-                bg="#d9d9d9",  
+                bg=self.default_bg,  
                 bd=5,           
                 relief="ridge", 
                 width=400,      
@@ -263,19 +226,104 @@ class GTG:
         
         def on_hover(self, event):
             if self.enable_hover:
-                self.configure(bg="#c0c0c0")  
+                self.configure(bg=self.hover_bg)  
 
         def on_leave(self, event):
             if self.enable_hover:
-                self.configure(bg="#d9d9d9")  
+                self.configure(bg=self.default_bg)  
 
         def draw_rectangle(self, x1, y1, x2, y2, **kwargs):
-            """Draws a rectangle on the canvas."""
+            """Draws a rectangle on the canvas.
+            
+            Args:
+                x1, y1, x2, y2 (int): Coordinates of the rectangle.
+                **kwargs: Additional arguments for the rectangle (e.g., fill, outline).
+            
+            Returns:
+                int: The ID of the rectangle object.
+            """
             return self.create_rectangle(x1, y1, x2, y2, **kwargs)
 
+        def draw_circle(self, x, y, radius, **kwargs):
+            """Draws a circle on the canvas.
+            
+            Args:
+                x, y (int): Coordinates of the center of the circle.
+                radius (int): Radius of the circle.
+                **kwargs: Additional arguments for the circle (e.g., fill, outline).
+            
+            Returns:
+                int: The ID of the circle object.
+            """
+            return self.create_oval(x-radius, y-radius, x+radius, y+radius, **kwargs)
+
+        def draw_line(self, x1, y1, x2, y2, **kwargs):
+            """Draws a line on the canvas.
+            
+            Args:
+                x1, y1, x2, y2 (int): Coordinates of the line.
+                **kwargs: Additional arguments for the line (e.g., fill, width).
+            
+            Returns:
+                int: The ID of the line object.
+            """
+            return self.create_line(x1, y1, x2, y2, **kwargs)
+
+        def draw_polygon(self, points, **kwargs):
+            """Draws a polygon on the canvas.
+            
+            Args:
+                points (list of tuples): List of (x, y) coordinates for the polygon.
+                **kwargs: Additional arguments for the polygon (e.g., fill, outline).
+            
+            Returns:
+                int: The ID of the polygon object.
+            """
+            return self.create_polygon(points, **kwargs)
+
         def draw_text(self, x, y, text, **kwargs):
-            """Draws text on the canvas."""
+            """Draws text on the canvas.
+            
+            Args:
+                x, y (int): Coordinates of the text.
+                text (str): The text to display.
+                **kwargs: Additional arguments for the text (e.g., font, fill).
+            
+            Returns:
+                int: The ID of the text object.
+            """
             return self.create_text(x, y, text=text, **kwargs)
+
+        def clear_canvas(self):
+            """Clears all objects from the canvas."""
+            self.delete("all")
+
+        def set_background_color(self, color):
+            """Sets the background color of the canvas.
+            
+            Args:
+                color (str): The color to set as the background.
+            """
+            self.configure(bg=color)
+
+        def set_hover_color(self, color):
+            """Sets the hover color of the canvas.
+            
+            Args:
+                color (str): The color to set as the hover background.
+            """
+            self.hover_bg = color
+
+        def set_default_color(self, color):
+            """Sets the default color of the canvas.
+            
+            Args:
+                color (str): The color to set as the default background.
+            """
+            self.default_bg = color
+            self.configure(bg=color)
+
+
 #! -------------------------------------------------------------------------------------------------------------------------   
     
     class Entry(tk.Entry):
@@ -323,20 +371,25 @@ class GTG:
 #! -------------------------------------------------------------------------------------------------------------------------
     
     class Toplevel(tk.Toplevel):
-        def __init__(self, parent, enable_hover=True, **kwargs):
+        def __init__(self, parent, enable_hover=False, default_bg="#7f7f7f", default_highlight="#a0a0a0",
+                    hover_bg="#e0e0e0", hover_highlight="#808080", relief="ridge", borderwidth=10,
+                    highlightthickness=2, **kwargs):
             super().__init__(parent, **kwargs)
 
-            self.default_bg = "#7f7f7f"
-            self.default_highlight = "#a0a0a0"
-            
+            # \\ Customizable attributes
+            self.default_bg = default_bg
+            self.default_highlight = default_highlight
+            self.hover_bg = hover_bg
+            self.hover_highlight = hover_highlight
+
+            # \\ Configure the window's appearance
             self.configure(
-                bg=self.default_bg, 
-                relief="ridge", 
-                borderwidth=10, 
-                highlightthickness=2,
+                bg=self.default_bg,
+                relief=relief,
+                borderwidth=borderwidth,
+                highlightthickness=highlightthickness,
                 highlightbackground=self.default_highlight
             )
-
             self.enable_hover = enable_hover
 
             if self.enable_hover:
@@ -346,13 +399,12 @@ class GTG:
         def on_hover(self, event):
             """Hover effect: Change background color on mouse enter"""
             if self.enable_hover:
-                self.configure(bg="#e0e0e0", highlightbackground="#808080")
+                self.configure(bg=self.hover_bg, highlightbackground=self.hover_highlight)
 
         def on_leave(self, event):
             """Reset background color when mouse leaves"""
             if self.enable_hover:
                 self.configure(bg=self.default_bg, highlightbackground=self.default_highlight)
-
 #! -------------------------------------------------------------------------------------------------------------------------
     class Scale(tk.Scale):
         def __init__(self, parent, enable_hover=True, enable_click_effect=True, show_value=True, **kwargs):
@@ -852,12 +904,12 @@ class GTG:
             self.sash_color = sash_color if sash_color else self.default_sash_color
             self.hover_sash_color = hover_sash_color if hover_sash_color else self.default_hover_sash_color
 
-            #\\  Configure the style for the PanedWindow
+            # \\  Configure the style for the PanedWindow
             self.style = ttk.Style()
             self.style.configure("Custom.TPanedwindow", background="#d9d9d9")
             self.style.configure("Custom.TPanedwindow.Sash", background=self.sash_color)
 
-            # Apply the custom style
+            # \\  Apply the custom style
             self.configure(style="Custom.TPanedwindow")
 
             if self.enable_hover:
@@ -878,29 +930,29 @@ class GTG:
         def on_sash_hover(self, event):
             """Change sash color when hovering over it."""
             if self.enable_hover:
-                sash_width = 5  # Width of the sash
+                sash_width = 5  # \\  Width of the sash
                 sash_positions = self.get_sash_positions()
 
                 for pos in sash_positions:
                     if self.orientation == "horizontal":
-                        # Check if the mouse is near a horizontal sash
+                        # \\ Check if the mouse is near a horizontal sash
                         if abs(event.y - pos) < sash_width:
                             self.style.configure("Custom.TPanedwindow.Sash", background=self.hover_sash_color)
                             return
                     else:
-                        # Check if the mouse is near a vertical sash
+                        # \\ Check if the mouse is near a vertical sash
                         if abs(event.x - pos) < sash_width:
                             self.style.configure("Custom.TPanedwindow.Sash", background=self.hover_sash_color)
                             return
 
-                # If not near any sash, revert to the default sash color
+                # \\ If not near any sash, revert to the default sash color
                 self.style.configure("Custom.TPanedwindow.Sash", background=self.sash_color)
 
         def get_sash_positions(self):
             """Get the positions of all sashes in the PanedWindow."""
             sash_positions = []
-            num_panes = len(self.panes())  # Get the number of panes
-            for i in range(num_panes - 1):  # Number of sashes is one less than the number of panes
+            num_panes = len(self.panes())  
+            for i in range(num_panes - 1):  # \\ Number of sashes is one less than the number of panes
                 sash_positions.append(self.sashpos(i))
             return sash_positions
 
@@ -930,6 +982,20 @@ class GTG:
             """Set the relief style of the sash."""
             self.style.configure("Custom.TPanedwindow.Sash", relief=relief)
 
+
+    class SplitView(ttk.PanedWindow):
+        def __init__(self, parent, orientation="horizontal", **kwargs):
+            super().__init__(parent, orient=orientation, **kwargs)
+            self.pane1 = GTG.Frame(self,bg="#868686", relief="groove", borderwidth=20)
+            self.pane2 = GTG.Frame(self, bg="#868686")
+            self.add(self.pane1)
+            self.add(self.pane2)
+
+        def add_widget(self, widget, pane=1):
+            if pane == 1:
+                widget.pack(in_=self.pane1, fill="both", expand=True)
+            else:
+                widget.pack(in_=self.pane2, fill="both", expand=True)
 
 #! ------------------------------------------  END of Main Widgets ------------------------------------------------------------------------------------------------
 
@@ -1197,391 +1263,5 @@ class GTG:
         def __str__(self):
             return self.message
 
-#!----------------------------------- END oF VARIABLES -------------------------------------------------------------------------------------------
 
-
-    
-#!------------------------------------ Custom PreBuilt Widgets-------------------------------------------------------------------------------------
-    class CustomFileDialog(tk.Toplevel):
-        def __init__(self, parent, initialdir=None, title="Select File"):
-            super().__init__(parent)
-            self.title(title)
-            self.geometry("400x300")
-            self.file_path = None
-
-            self.initialdir = initialdir if initialdir else os.getcwd()
-            self.current_dir = self.initialdir
-
-            self.create_widgets()
-
-        def create_widgets(self):
-            # \\ Frame for directory navigation
-            nav_frame = GTG.Frame(self)
-            nav_frame.pack(fill=tk.X, padx=5, pady=5)
-
-            self.up_button = GTG.Button(nav_frame, text="Up", command=self.go_up)
-            self.up_button.pack(side=tk.LEFT, padx=5)
-
-            self.dir_label = GTG.Label(nav_frame, text=self.current_dir)
-            self.dir_label.pack(side=tk.LEFT, expand=True, fill=tk.X)
-
-            # \\ Listbox to display files and directories
-            self.listbox = GTG.Listbox(self)
-            self.listbox.pack(expand=True, fill=tk.BOTH, padx=5, pady=5)
-            self.listbox.bind("<Double-Button-1>", self.on_double_click)
-
-            # \\ Buttons for selection
-            button_frame = GTG.Frame(self)
-            button_frame.pack(fill=tk.X, padx=5, pady=5)
-
-            self.select_button = GTG.Button(button_frame, text="Select", command=self.on_select)
-            self.select_button.pack(side=tk.RIGHT, padx=5)
-
-            self.cancel_button = GTG.Button(button_frame, text="Cancel", command=self.destroy)
-            self.cancel_button.pack(side=tk.RIGHT, padx=5)
-
-            self.update_listbox()
-
-        def update_listbox(self):
-            self.listbox.delete(0, tk.END)
-            self.listbox.insert(tk.END, "..")  # \\ Add "up" directory
-            for item in os.listdir(self.current_dir):
-                self.listbox.insert(tk.END, item)
-
-        def go_up(self):
-            new_dir = os.path.dirname(self.current_dir)
-            if os.path.exists(new_dir):
-                self.current_dir = new_dir
-                self.dir_label.config(text=self.current_dir)
-                self.update_listbox()
-
-        def on_double_click(self, event):
-            selected = self.listbox.get(self.listbox.curselection())
-            new_path = os.path.join(self.current_dir, selected)
-            if os.path.isdir(new_path):
-                self.current_dir = new_path
-                self.dir_label.config(text=self.current_dir)
-                self.update_listbox()
-
-        def on_select(self):
-            selected = self.listbox.get(self.listbox.curselection())
-            self.file_path = os.path.join(self.current_dir, selected)
-            self.destroy()
-
-        def get_file_path(self):
-            return self.file_path
-
-#! -------------------------------------------------------------------------------------------------------------------------
-    class Tooltip:
-        def __init__(self, widget, text, delay=500, bg="#ffffe0", fg="black", font=("Arial", 10), borderwidth=1, relief="solid"):
-            """
-            Initialize the Tooltip.
-
-            Parameters:
-                widget: The widget to which the tooltip is attached.
-                text (str): The text to display in the tooltip.
-                delay (int): Delay in milliseconds before the tooltip appears.
-                bg (str): Background color of the tooltip.
-                fg (str): Foreground (text) color of the tooltip.
-                font (tuple): Font style and size for the tooltip text.
-                borderwidth (int): Border width of the tooltip.
-                relief (str): Border style of the tooltip (e.g., "solid", "raised").
-            """
-            self.widget = widget
-            self.text = text
-            self.delay = delay
-            self.bg = bg
-            self.fg = fg
-            self.font = font
-            self.borderwidth = borderwidth
-            self.relief = relief
-            self.tooltip = None
-            self.tooltip_id = None
-
-            # \\ Bind events
-            self.widget.bind("<Enter>", self.on_enter)
-            self.widget.bind("<Leave>", self.on_leave)
-            self.widget.bind("<ButtonPress>", self.on_leave)
-
-        def on_enter(self, event=None):
-            """Schedule the tooltip to appear after a delay."""
-            self.tooltip_id = self.widget.after(self.delay, self.show_tooltip)
-
-        def on_leave(self, event=None):
-            """Hide the tooltip and cancel the scheduled appearance."""
-            if self.tooltip_id:
-                self.widget.after_cancel(self.tooltip_id)
-                self.tooltip_id = None
-            if self.tooltip:
-                self.tooltip.destroy()
-                self.tooltip = None
-
-        def show_tooltip(self):
-            """Display the tooltip."""
-            x, y, _, _ = self.widget.bbox("insert")
-            x += self.widget.winfo_rootx() + 25
-            y += self.widget.winfo_rooty() + 25
-
-            self.tooltip = tk.Toplevel(self.widget)
-            self.tooltip.wm_overrideredirect(True)  # Remove window decorations
-            self.tooltip.wm_geometry(f"+{x}+{y}")
-
-            label = GTG.Label(
-                self.tooltip,
-                text=self.text,
-                bg=self.bg,
-                fg=self.fg,
-                font=self.font,
-                relief=self.relief,
-                borderwidth=self.borderwidth
-            ) 
-            label.pack()
-
-#! -----------------------------------------------------------------------------------
-
-class CustomColorPicker:
-    def __init__(self, color_callback):
-        self.color_callback = color_callback  
-        self.current_color = (0, 0, 0)  
-        self.shaded_color = (0, 0, 0)  
-        self.color_display_label = None  
-        self.crosshair_dot = None 
-
-    def open_picker(self):
-        """Open the custom color picker in a new window."""
-        picker_window = tk.Toplevel()
-        picker_window.title("Custom Color Picker")
-        picker_window.geometry("500x600")
-        picker_window.resizable(False, False)
-        picker_window.configure(bg="#2b2b2b")
-        color_frame = GTG.Frame(picker_window, bd=10, relief="sunken", background="black")
-        color_frame.pack(side="top", padx=20, pady=10)
-
-        color_canvas = tk.Canvas(color_frame, width=200, height=200, bg="white", cursor="cross")
-        color_canvas.pack()
-
-        self.draw_color_square(color_canvas)
-        self.crosshair_dot = color_canvas.create_oval(0, 0, 10, 10, fill="black")
-
-        color_canvas.bind("<Button-1>", lambda event: self.on_color_pick(event, color_canvas))
-        color_canvas.bind("<B1-Motion>", lambda event: self.on_drag(event, color_canvas))
-
-        shade_label = GTG.Label(picker_window, text="Shade" , enable_hover=False)
-        shade_label.pack(side="top", padx=20)
-
-        shade_slider = GTG.Scale(picker_window, from_=0, to_=100, orient="horizontal", command=self.on_shade_change)
-        shade_slider.set(100)
-        shade_slider.pack(side="top", padx=20, pady=10)
-        shade_slider.set_colors(bg="gray", fg="black", troughcolor="#b0b0b0", hover_bg="#d0d0d0", hover_highlight="#707070", click_bg="gray", click_highlight="#505050")
-
-        self.color_display_label = GTG.Label(picker_window, text="Selected Color: #000000", font=("Helvetica", 10) , enable_hover=False)
-        self.color_display_label.pack(side="top", padx=20, pady=5)
-
-        
-        scrollable_frame = GTG.Frame(picker_window,relief='sunken', borderwidth=10, background="black")
-        scrollable_frame.pack(side="top", padx=75, pady=20, fill="both", expand=True)
-        canvas = tk.Canvas(scrollable_frame)
-        scrollbar = GTG.Scrollbar(scrollable_frame, orient="vertical", command=canvas.yview)
-        canvas.configure(yscrollcommand=scrollbar.set)
-        scrollbar.pack(side="right", fill="y") 
-        canvas.pack(side="left", fill="both", expand=True)
-
-        button_frame = GTG.Frame(canvas)
-        canvas.create_window((0, 0), window=button_frame, anchor="nw")
-
-        header_label = GTG.Label(button_frame, text="Predefined Colors", font=("Helvetica", 12, "bold"), relief="sunken", borderwidth=10 , enable_hover=False)
-        header_label.grid(row=0, column=0, columnspan=5, pady=10)
-
-        predefined_colors = [
-            ("#FF0000", "Red"), ("#00FF00", "Lime Green"), ("#0000FF", "Blue"),
-            ("#FFFF00", "Yellow"), ("#FFA500", "Orange"), ("#800080", "Purple"),
-            ("#FFC0CB", "Pink"), ("#008080", "Teal"), ("#000000", "Black"),
-            ("#A52A2A", "Brown"),
-            ("#8A2BE2", "BlueViolet"), ("#A52A2A", "Brown"), ("#DEB887", "BurlyWood"),
-            ("#5F9EA0", "CadetBlue"), ("#7FFF00", "Chartreuse"), ("#D2691E", "Chocolate"),
-            ("#FF7F50", "Coral"), ("#6495ED", "CornflowerBlue"), ("#DC143C", "Crimson"),
-            ("#00FFFF", "Cyan"), ("#00008B", "DarkBlue"), ("#008B8B", "DarkCyan"),
-            ("#B8860B", "DarkGoldenRod"), ("#A9A9A9", "DarkGray"), ("#006400", "DarkGreen"),
-            ("#BDB76B", "DarkKhaki"), ("#8B008B", "DarkMagenta"), ("#556B2F", "DarkOliveGreen"),
-            ("#FF8C00", "DarkOrange"), ("#9932CC", "DarkOrchid"), ("#8B0000", "DarkRed"),
-            ("#E9967A", "DarkSalmon"), ("#8FBC8F", "DarkSeaGreen"), ("#483D8B", "DarkSlateBlue"),
-            ("#2F4F4F", "DarkSlateGray"), ("#00CED1", "DarkTurquoise"), ("#9400D3", "DarkViolet"),
-            ("#FF1493", "DeepPink"), ("#00BFFF", "DeepSkyBlue"), ("#696969", "DimGray"),
-            ("#1E90FF", "DodgerBlue"), ("#B22222", "FireBrick"), ("#228B22", "ForestGreen"),
-            ("#DCDCDC", "Gainsboro"), ("#FFD700", "Gold"), ("#DAA520", "GoldenRod"),
-            ("#808080", "Gray"), ("#008000", "Green"), ("#ADFF2F", "GreenYellow"),
-            ("#F0FFF0", "HoneyDew"), ("#FF69B4", "HotPink"), ("#CD5C5C", "IndianRed"),
-            ("#4B0082", "Indigo"), ("#F0E68C", "Khaki"), ("#E6E6FA", "Lavender"),
-            ("#7CFC00", "LawnGreen"), ("#FFFACD", "LemonChiffon"), ("#ADD8E6", "LightBlue"),
-            ("#F08080", "LightCoral"), ("#D3D3D3", "LightGray"), ("#90EE90", "LightGreen"),
-            ("#FFB6C1", "LightPink"), ("#FFA07A", "LightSalmon"), ("#20B2AA", "LightSeaGreen"),
-            ("#87CEFA", "LightSkyBlue"), ("#778899", "LightSlateGray"), ("#B0C4DE", "LightSteelBlue"),
-            ("#32CD32", "LimeGreen"), ("#FF00FF", "Magenta"), ("#800000", "Maroon"),
-            ("#66CDAA", "MediumAquaMarine"), ("#0000CD", "MediumBlue"), ("#BA55D3", "MediumOrchid"),
-            ("#9370DB", "MediumPurple"), ("#3CB371", "MediumSeaGreen"), ("#7B68EE", "MediumSlateBlue"),
-            ("#00FA9A", "MediumSpringGreen"), ("#48D1CC", "MediumTurquoise"), ("#C71585", "MediumVioletRed"),
-            ("#191970", "MidnightBlue"), ("#F5FFFA", "MintCream"), ("#FFE4E1", "MistyRose"),
-            ("#FFDEAD", "NavajoWhite"), ("#000080", "Navy"), ("#808000", "Olive"),
-            ("#6B8E23", "OliveDrab"), ("#FF6347", "Tomato"), ("#EE82EE", "Violet"),
-            ("#D2691E", "Chocolate"), ("#FF4500", "OrangeRed"), 
-            ("#8B0000", "DarkRed"), ("#4682B4", "SteelBlue")
-        ]
-
-        row, col = 1, 0
-        for color_code, color_name in predefined_colors:
-            color_button = GTG.Button(button_frame, bg=color_code, hover_bg=color_code ,
-                                     command=lambda color=color_code: self.on_color_pick_predefined(color))
-            color_button.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
-            col += 1
-            if col > 4:
-                col = 0
-                row += 4
-
-        button_frame.update_idletasks()
-        canvas.config(scrollregion=canvas.bbox("all"))
-
-        close_button = GTG.Button(picker_window, text="Close", command=picker_window.destroy)
-        close_button.pack(side="bottom", pady=10)
-
-    def draw_color_square(self, canvas):
-        """Draw a color square with a gradient.""" 
-        for i in range(200):
-            for j in range(200):
-                r, g, b = self.get_color_for_square(i, j)
-                canvas.create_line(i, j, i+1, j+1, fill=f"#{r:02x}{g:02x}{b:02x}", width=1)
-
-    def get_color_for_square(self, x, y):
-        """Simulate HSV-to-RGB color values for the square.""" 
-        hue = x / 200.0
-        saturation = y / 200.0
-        value = 1.0  
-        return self.hsv_to_rgb(hue, saturation, value)
-
-    def hsv_to_rgb(self, h, s, v):
-        """Convert HSV to RGB.""" 
-        import colorsys
-        r, g, b = colorsys.hsv_to_rgb(h, s, v)
-        return int(r * 255), int(g * 255), int(b * 255)
-
-    def on_color_pick(self, event, canvas):
-        """Handle color selection from the canvas.""" 
-        x, y = event.x, event.y
-        if x < 200 and y < 200:
-            self.current_color = self.get_color_for_square(x, y)
-            self.shaded_color = self.current_color  
-            self.update_color_display()
-            self.update_crosshair_position(x, y, canvas)
-
-    def on_color_pick_predefined(self, color):
-        """Handle selection from predefined colors.""" 
-        self.current_color = self.hex_to_rgb(color)
-        self.shaded_color = self.current_color  
-        self.update_color_display()
-
-    def on_shade_change(self, value):
-        """Adjust shade based on slider value.""" 
-        if isinstance(self.current_color, tuple):
-            value = float(value)
-            r, g, b = self.current_color
-            factor = value / 100.0
-            r, g, b = int(r * factor), int(g * factor), int(b * factor)
-            self.shaded_color = (r, g, b)
-            self.update_color_display()
-
-    def hex_to_rgb(self, hex_code):
-        """Convert HEX to RGB.""" 
-        hex_code = hex_code.lstrip('#')
-        return tuple(int(hex_code[i:i+2], 16) for i in (0, 2, 4))
-
-    def update_color_display(self):
-        """Update the label to show the selected and shaded color.""" 
-        if self.color_display_label:  
-            hex_color = f"#{self.shaded_color[0]:02x}{self.shaded_color[1]:02x}{self.shaded_color[2]:02x}"
-            self.color_display_label.config(text=f"Selected Color: {hex_color}")
-            self.color_display_label.config(background=hex_color)  
-            self.color_callback(hex_color)  
-
-    def update_crosshair_position(self, x, y, canvas):
-        """Update the position of the crosshair dot.""" 
-        canvas.coords(self.crosshair_dot, x-5, y-5, x+5, y+5)  #  \\ Adjust to center the dot on the click position
-
-    def on_drag(self, event, canvas):
-        """Handle dragging the crosshair dot.""" 
-        x, y = event.x, event.y
-        if x < 200 and y < 200:
-            self.update_crosshair_position(x, y, canvas)
-            self.on_color_pick(event, canvas) 
-
-#! -------------------------------------------------------------------------------------------------------------------------
-class SidePanel:
-    def __init__(self, root, width=200, height=500, x=0, y=0, bg="gray", open_state=True, Frame="raised"):
-        self.root = root
-        self.width = width
-        self.height = height
-        self.x = x
-        self.y = y
-        self.bg = bg
-        self.open_state = open_state
-        self.relief = Frame  
-        self.panel = None
-        self.toggle_button = None
-        self.animating = False
-        self.dragging = False
-        self.drag_offset_x = 0
-        self.drag_offset_y = 0
-
-    def _build(self):
-        self.panel = GTG.Frame(self.root, width=self.width, height=self.height, bg=self.bg,
-                            relief=self.relief, borderwidth=10 , enable_hover=False)
-        self.panel.place(x=self.x if self.open_state else -self.width, y=self.y)
-
-        self.toggle_button = GTG.Button(self.root, text="☰", command=self.toggle_panel, bg=self.bg)
-        self.toggle_button.place(x=self.x + self.width - 30, y=self.y + 10)
-
-
-        self.toggle_button.bind("<ButtonPress-1>", self.start_drag)
-        self.toggle_button.bind("<B1-Motion>", self.on_drag)
-        self.toggle_button.bind("<ButtonRelease-1>", self.stop_drag)
-
-    def toggle_panel(self):
-        if self.animating:
-            return
-
-        target_x = self.x if not self.open_state else -self.width
-        self.animate_panel(target_x)
-        self.open_state = not self.open_state
-
-    def animate_panel(self, target_x):
-        self.animating = True
-        current_x = self.panel.winfo_x()
-
-        if current_x == target_x:
-            self.animating = False
-            return
-
-        step = 20 if target_x > current_x else -20
-        next_x = current_x + step
-
-        if (step > 0 and next_x > target_x) or (step < 0 and next_x < target_x):
-            next_x = target_x
-
-        self.panel.place(x=next_x, y=self.y)
-        self.root.after(10, lambda: self.animate_panel(target_x))
-
-    def add_widget(self, widget):
-        widget._build(self.panel)
-
-    def start_drag(self, event):
-        self.dragging = True
-        self.drag_offset_x = event.x
-        self.drag_offset_y = event.y
-
-    def on_drag(self, event):
-        if self.dragging:
-            new_x = self.toggle_button.winfo_x() + (event.x - self.drag_offset_x)
-            new_y = self.toggle_button.winfo_y() + (event.y - self.drag_offset_y)
-            self.toggle_button.place(x=new_x, y=new_y)
-
-    def stop_drag(self, event):
-        self.dragging = False 
-#! -------------------------------------------------------------------------------------------------------------------------
+#!------------------------------------------------------------------------------------------------------------------------------
