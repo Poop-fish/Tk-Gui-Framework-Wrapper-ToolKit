@@ -201,30 +201,45 @@ class GTG:
     
     class Entry(tk.Entry):
         def __init__(self, parent, enable_hover=True, **kwargs):
+        
+            self.hover_bg = kwargs.pop("hover_bg", None)
+            self.hover_fg = kwargs.pop("hover_fg", None)
+            self.hover_highlightbackground = kwargs.pop("hover_highlightbackground", None)
+            self.hover_highlightcolor = kwargs.pop("hover_highlightcolor", None)
+
             super().__init__(parent, **kwargs)
+
+            #* \\ Default styles
+            self.default_bg = self.cget("bg")
+            self.default_fg = self.cget("fg")
+            self.default_highlightbackground = self.cget("highlightbackground")
+            self.default_highlightcolor = self.cget("highlightcolor")
+
+            #* \\ Enable hover effects
             self.enable_hover = enable_hover
-            self.configure(
-                bg="white",  
-                fg="black",  
-                font=("Arial", 12),  
-                borderwidth=5,  
-                relief="sunken",  
-                insertbackground="black",  
-                highlightthickness=2,  
-                highlightbackground="#a0a0a0",  
-                highlightcolor="#808080"  
-            )
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover)
                 self.bind("<Leave>", self.on_leave)
 
         def on_hover(self, event):
             if self.enable_hover:
-                self.configure(highlightbackground="#808080", highlightcolor="#505050")  
+                if self.hover_bg:
+                    self.configure(bg=self.hover_bg)
+                if self.hover_fg:
+                    self.configure(fg=self.hover_fg)
+                if self.hover_highlightbackground:
+                    self.configure(highlightbackground=self.hover_highlightbackground)
+                if self.hover_highlightcolor:
+                    self.configure(highlightcolor=self.hover_highlightcolor)
 
         def on_leave(self, event):
             if self.enable_hover:
-                self.configure(highlightbackground="#a0a0a0", highlightcolor="#808080") 
+                self.configure(
+                    bg=self.default_bg,
+                    fg=self.default_fg,
+                    highlightbackground=self.default_highlightbackground,
+                    highlightcolor=self.default_highlightcolor
+                )
     
 #! -------------------------------------------------------------------------------------------------------------------------
     
