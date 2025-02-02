@@ -51,7 +51,7 @@ GTG Gui framework includes the following custom widgets:
 - **SidePanel:** A collapsible side panel with drag-and-drop functionality for the toggle button and you can add widgets to it.
 
 
-## Extended GTG Widgets Made Directly With GTG : ![Screenshot 2025-02-02 145336](https://github.com/user-attachments/assets/2e32680e-557d-4ef0-adf7-ecc9cca8b0f9)
+## 3. Extended GTG Widgets Made Directly With GTG : ![Screenshot 2025-02-02 145336](https://github.com/user-attachments/assets/2e32680e-557d-4ef0-adf7-ecc9cca8b0f9)
 
 this section showcases custom widgets and applications made with the **GTG** GUI framework, which allows you to create robust and highly customizable graphical user interfaces **(GUIs)**. These widgets extend the basic functionality of the **GTG** library, providing additional interactive features, ease of use, and intuitive interfaces for various applications.
 
@@ -65,7 +65,7 @@ this section showcases custom widgets and applications made with the **GTG** GUI
 These widgets can be easily integrated into any project that uses the GTG framework, providing enhanced functionality and creating more intuitive user interfaces. Whether you're building a simple file picker, a helpful tooltip system, or a dynamic side panel, these custom widgets will elevate the quality and interactivity of your GUI application.
 
   
-## 3. Advanced Features
+## 4. Advanced Features
 - **Dynamic Variables:** Custom variable classes (e.g., `StringVar`, `IntVar`, `BooleanVar`, `DateTimeVar`, etc.) for dynamic updates and data binding.
   - Example: Automatically update a Label when a `StringVar` changes.
 - **Error Handling:** `VallurErrorVar` and `VallurErrorException` for error management in the UI.
@@ -73,7 +73,7 @@ These widgets can be easily integrated into any project that uses the GTG framew
 - **File Handling:** `FileVar` simplifies working with file paths.
 - **Color Management:** `ColorVar` enables easy hex color code handling.
 
-## 4. Use Cases
+## 5. Use Cases
 GTG GUI framework is suitable for a variety of applications, including:
 - **Desktop Applications:** To-do lists, calculators, text editors, file explorers, etc.
 - **Data Visualization Tools:** Charts, graphs, and dashboards.
@@ -82,18 +82,18 @@ GTG GUI framework is suitable for a variety of applications, including:
 - **Custom Forms:** Input forms with validation and dynamic updates.
 **ideas are almost endless**
 
-## 5. Strengths
+## 6. Strengths
 - **Modern Look:** Customizable colors, hover effects, and styling create a polished appearance.
 - **Ease of Use:** Pre-built, customizable widgets simplify UI development.
 - **Extensibility:** Easily add new widgets or modify existing ones.
 - **Interactivity:** Hover effects, dynamic updates, and event handling enhance user experience.
 
-## 6. Limitations
+## 7. Limitations
 - **Performance:** May experience slowdowns with very complex UIs containing many widgets.
 - **Cross-Platform Consistency:** UI appearance may vary slightly across operating systems.
 - **Advanced Graphics:** For high-end graphics or animations, additional libraries (e.g., Pygame, Matplotlib) may be required.
 
-## 7. Ideal For
+## 8. Ideal For
 - **Rapid Prototyping:** Quickly build and test UI concepts.
 - **Small to Medium-Sized Applications:** Ideal for tools, utilities, and desktop apps.
 - **Educational Projects:** Perfect for learning GUI development and Python programming.
