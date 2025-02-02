@@ -97,75 +97,154 @@ class GTG:
 
 #! -------------------------------------------------------------------------------------------------------------------------
     class Label(tk.Label):
-        def __init__(self, parent, enable_hover=True, bg=None, fg=None, **kwargs):
+        def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, 
+                    font=None, borderwidth=None, relief=None, padx=None, pady=None, **kwargs):
             super().__init__(parent, **kwargs)
             
+            # Default values
             self.default_bg = "#7f7f7f"
             self.default_fg = "Black"
+            self.default_hover_bg = "#e0e0e0"
+            self.default_hover_fg = fg if fg is not None else self.default_fg
+            self.default_font = ("Arial", 12)
+            self.default_borderwidth = 5
+            self.default_relief = "sunken"
+            self.default_padx = 10
+            self.default_pady = 5
+            
+            # Customizable properties
             self.bg = bg if bg is not None else self.default_bg
             self.fg = fg if fg is not None else self.default_fg
+            self.hover_bg = hover_bg if hover_bg is not None else self.default_hover_bg
+            self.hover_fg = hover_fg if hover_fg is not None else self.default_hover_fg
+            self.font = font if font is not None else self.default_font
+            self.borderwidth = borderwidth if borderwidth is not None else self.default_borderwidth
+            self.relief = relief if relief is not None else self.default_relief
+            self.padx = padx if padx is not None else self.default_padx
+            self.pady = pady if pady is not None else self.default_pady
             
+            # Enable/disable hover effect
             self.enable_hover = enable_hover
+            
+            # Configure the label
             self.configure(
-                bg=self.bg,  
-                fg=self.fg,  
-                font=("Arial", 12),  
-                borderwidth=5,  
-                relief="sunken",  
-                padx=10, pady=5  
+                bg=self.bg,
+                fg=self.fg,
+                font=self.font,
+                borderwidth=self.borderwidth,
+                relief=self.relief,
+                padx=self.padx,
+                pady=self.pady
             )
             
+            # Bind hover events if enabled
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover)
                 self.bind("<Leave>", self.on_leave)
 
         def on_hover(self, event):
             if self.enable_hover:
-                self.configure(bg="#e0e0e0")  
+                self.configure(bg=self.hover_bg, fg=self.hover_fg)
 
         def on_leave(self, event):
             if self.enable_hover:
-                self.configure(bg=self.bg)   
+                self.configure(bg=self.bg, fg=self.fg)
+
     
 #! -------------------------------------------------------------------------------------------------------------------------   
     class Frame(tk.Frame):
-        def __init__(self, parent, enable_hover=False, bg=None, highlightbackground=None, relief="ridge", **kwargs):
+        def __init__(self, parent, enable_hover=False, bg=None, highlightbackground=None, hover_bg=None, 
+                    hover_highlight=None, relief="ridge", borderwidth=None, hover_borderwidth=None, 
+                    padx=None, pady=None, hover_padx=None, hover_pady=None, cursor=None, 
+                    animation_speed=10, **kwargs):
             super().__init__(parent, **kwargs)
-            self.default_bg = "#d9d9d9"  
-            self.default_highlight = "#a0a0a0"  
-
+            
+            #* \\ Default values
+            self.default_bg = "#d9d9d9"
+            self.default_highlight = "#a0a0a0"
+            self.default_hover_bg = "#c0c0c0"
+            self.default_hover_highlight = "#808080"
+            self.default_borderwidth = 5
+            self.default_padx = 0
+            self.default_pady = 0
+            self.default_cursor = "arrow"
+            
+            #* \\ Customizable properties
+            self.bg_color = bg if bg is not None else self.default_bg
+            self.highlight_color = highlightbackground if highlightbackground is not None else self.default_highlight
+            self.hover_bg = hover_bg if hover_bg is not None else self.default_hover_bg
+            self.hover_highlight = hover_highlight if hover_highlight is not None else self.default_hover_highlight
+            self.borderwidth = borderwidth if borderwidth is not None else self.default_borderwidth
+            self.hover_borderwidth = hover_borderwidth if hover_borderwidth is not None else self.borderwidth
+            self.padx = padx if padx is not None else self.default_padx
+            self.pady = pady if pady is not None else self.default_pady
+            self.hover_padx = hover_padx if hover_padx is not None else self.padx
+            self.hover_pady = hover_pady if hover_pady is not None else self.pady
+            self.cursor = cursor if cursor is not None else self.default_cursor
+            self.animation_speed = animation_speed
             self.enable_hover = enable_hover
-            self.bg_color = bg if bg else self.default_bg
-            self.highlight_color = highlightbackground if highlightbackground else self.default_highlight
-
-            # Configure the frame with or without relief
-            if relief is None:
-                self.configure(
-                    bg=self.bg_color,
-                    highlightthickness=2,
-                    highlightbackground=self.highlight_color
-                )
-            else:
-                self.configure(
-                    bg=self.bg_color,
-                    relief=relief,
-                    borderwidth=5,
-                    highlightthickness=2,
-                    highlightbackground=self.highlight_color
-                )
-
+        
+            self.configure_frame()
+            
+            # \\ Bind hover events if enabled
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover)
                 self.bind("<Leave>", self.on_leave)
 
+        def configure_frame(self):
+            """Configure the frame's appearance."""
+            self.configure(
+                bg=self.bg_color,
+                relief="ridge",
+                borderwidth=self.borderwidth,
+                highlightthickness=2,
+                highlightbackground=self.highlight_color,
+                padx=self.padx,
+                pady=self.pady,
+                cursor=self.cursor
+            )
+
         def on_hover(self, event):
+            """Handle hover events."""
             if self.enable_hover:
-                self.configure(bg="#c0c0c0", highlightbackground="#808080")
+                self.animate_color(self.bg_color, self.hover_bg, self.highlight_color, self.hover_highlight)
+                self.configure(padx=self.hover_padx, pady=self.hover_pady, borderwidth=self.hover_borderwidth)
 
         def on_leave(self, event):
+            """Handle leave events."""
             if self.enable_hover:
-                self.configure(bg=self.bg_color, highlightbackground=self.highlight_color)
+                self.animate_color(self.hover_bg, self.bg_color, self.hover_highlight, self.highlight_color)
+                self.configure(padx=self.padx, pady=self.pady, borderwidth=self.borderwidth)
 
+        def animate_color(self, from_bg, to_bg, from_highlight, to_highlight):
+            """Smoothly animate the background and highlight colors."""
+            steps = 10
+            delta_bg = self.calculate_color_delta(from_bg, to_bg, steps)
+            delta_highlight = self.calculate_color_delta(from_highlight, to_highlight, steps)
+            
+            def update_step(step):
+                if step < steps:
+                    new_bg = self.interpolate_color(from_bg, delta_bg, step)
+                    new_highlight = self.interpolate_color(from_highlight, delta_highlight, step)
+                    self.configure(bg=new_bg, highlightbackground=new_highlight)
+                    self.after(self.animation_speed, update_step, step + 1)
+            
+            update_step(0)
+
+        def calculate_color_delta(self, from_color, to_color, steps):
+            """Calculate the color delta for each step."""
+            return [
+                (int(to_color[i:i+2], 16) - int(from_color[i:i+2], 16)) / steps
+                for i in range(1, 7, 2)
+            ]
+
+        def interpolate_color(self, start, delta, step):
+            """Interpolate between two colors."""
+            return "#{:02x}{:02x}{:02x}".format(
+                int(start[1:3], 16) + int(delta[0] * step),
+                int(start[3:5], 16) + int(delta[1] * step),
+                int(start[5:7], 16) + int(delta[2] * step)
+            )
 #! -------------------------------------------------------------------------------------------------------------------------  
     class Canvas(tk.Canvas):
         def __init__(self, parent, enable_hover=True, **kwargs):
