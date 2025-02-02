@@ -122,7 +122,7 @@ root.mainloop()
 #!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-#! Example Message Pop ups widget
+#! Example of Messagebox Pop up widget
 def show_info():
     GTG.showinfo(root, "Info", "This is an info message.")
 
