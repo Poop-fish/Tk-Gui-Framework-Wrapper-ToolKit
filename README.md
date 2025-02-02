@@ -17,7 +17,7 @@ You can install the required Python packages using pip:
 
 - pip install pillow pygments
 
-if you still having issues just copy all the import and as ChatGPT or google them
+if you still having issues just copy all the import and ask ChatGPT or google them
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
