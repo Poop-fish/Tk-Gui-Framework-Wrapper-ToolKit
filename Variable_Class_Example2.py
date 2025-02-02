@@ -1,177 +1,124 @@
-import tkinter as tk
-from GTG_imports import *  
-from GTG_Widgets import *
-from tkinter import ttk
+from GTG_Widgets import GTG
+from GTG_DateTime_Module import *
+from GTG_imports import *
+from GTG_Extended_Widgets import FileDialog , SidePanel , Tooltip
 
 
+# #!------------ || Hover Tooltip Widget Example ||----------------------
+# root = tk.Tk()
+# root.title("Tooltip Example")
+# root.geometry("300x200")
 
-#! String And Boolean Variable Example
-def on_string_change(new_value):
-    print(f"StringVar changed to: {new_value}")
+# button = GTG.Button(root, text="Hover over me!")
+# button.pack(pady=20)
 
-def on_boolean_change(new_value):
-    print(f"BooleanVar changed to: {new_value}")
+# # \\ Attach a tooltip to the button
+# tooltip = GT.Tooltip(
+#     button,
+#     text="This is a tooltip!",
+#     delay=500,  # \\ Tooltip appears after 500ms
+#     bg="#ffffe0",  # \\ Light yellow background
+#     fg="black",  # \\ Black text
+#     font=("Arial", 10),  # \\ Font style and size
+#     borderwidth=1,  # \\ Border width
+#     relief="solid"  # \\ Border style
+# )
 
+# entry = GTG.Entry(root)
+# entry.pack(pady=20)
+
+# # \\ Attach a tooltip to the entry widget
+# entry_tooltip = GT.Tooltip(
+#     entry,
+#     text="Enter some text here.",
+#     bg="lightblue",
+#     fg="white",
+#     font=("Arial", 12, "bold")
+# )
+
+# root.mainloop() 
+
+
+#!------------ || Side Panel Widget Example ||----------------------
+
+# root = tk.Tk()
+# root.title("Side Panel Example")
+# root.geometry("800x600")
+
+# side_panel = SidePanel(root, width=200, height=500,bg="lightgray", open_state=True ,)
+# side_panel._build()  #* \\ Build the side panel and its toggle button 
+
+
+# #* \\ Example: Add a GTG.label to the side panel
+# label = GTG.Label(side_panel.panel, text="This is a side panel", bg="lightgray")
+# label.pack(pady=100)
+
+# #* \\ Example: Create and Add GTG.Listbox widget to side panel
+# listbox = GTG.Listbox(side_panel.panel)
+# listbox.pack(pady=5)
+# listbox.insert(0, "Item 1")
+# listbox.insert(1, "Item 2")
+# listbox.insert(2, "Item 3")
+
+
+# #* \\ Example: Add a button to the side panel
+# button = GTG.Button(side_panel.panel, text="Click Me", bg="white")
+# button.pack(pady=10) 
+
+# root.mainloop() 
+
+
+# #!------------ || Paned Window Widget Example ||----------------------
+
+# root = tk.Tk()
+# root.geometry("400x300")
+
+# #* \\ Example: Create and Pack PanedWindow to a tkinter window
+# paned_window = GTG.PanedWindow(root, sash_color="blue", hover_sash_color="red", orientation="vertical")
+# paned_window.pack(fill=tk.BOTH, expand=True)
+
+# #* \\ Example: Add panes
+# frame1 = GTG.Frame(paned_window, bg="lightblue")
+# frame2 = GTG.Frame(paned_window, bg="lightgreen")
+# frame3 = GTG.Frame(paned_window, bg="lightcoral")
+# #* \\ Build function for panes
+# paned_window.add_pane(frame1)
+# paned_window.add_pane(frame2)
+# paned_window.add_pane(frame3)
+
+# #* \\ Example: Add some widgets to the frames
+# label1 = GTG.Label(frame1, text="Test Text 1", font=("Arial", 14))
+# label1.pack(pady=20)
+
+# label2 = GTG.Label(frame2, text="Test Text 2", font=("Arial", 14))
+# label2.pack(pady=20)
+
+# label3 = GTG.Label(frame3, text="Test Text 3", font=("Arial", 14))
+# label3.pack(pady=20)
+
+# root.mainloop() 
+
+#!-------------------------------------------------------------------------------------------------
+
+#! CustomFile Dialog example 
 root = tk.Tk()
+root.title("Main Window")
+root.geometry("400x300")
 
-#* \\ Create a StringVar with a callback
-string_var = GTG.StringVar(value="Hello", callback=on_string_change)
-entry = GTG.Entry(root)
-string_var.bind_to_widget(entry)  #*  \\ Bind Var to an Entry widget
-entry.pack()
-
-#* \\ Create a BooleanVar with a callback \\
-boolean_var = GTG.BooleanVar(value=False, callback=on_boolean_change)
-checkbutton = GTG.Checkbutton(root, text="Check me")
-boolean_var.bind_to_widget(checkbutton)  #* \\ Bind Var to a Checkbutton widget
-checkbutton.pack()
-
-root.mainloop() 
-
-#!---------------------------------------------------------------------------------------------------------------
-
-#! \\ List , file , DateTime Variables Example //
-
-def list_changed_callback(new_value):
-    print(f"List updated: {new_value}")
-
-
-def file_changed_callback(new_value):
-    print(f"Selected file: {new_value}")
-
-
-def datetime_changed_callback(new_value):
-    print(f"Updated datetime: {new_value}")
-
-root = tk.Tk()
-root.title("ListVar Example")
-
-#* \\ Create a ListVar instance
-list_var = GTG.ListVar(value=["Apple", "Banana"], callback=list_changed_callback)
-
-#* \\ Label to display the list
-label = GTG.Label(root, text="List: ")
-label.pack(pady=10)
-
-#* \\ Bind the ListVar to the Label
-list_var.bind_to_widget(label)
-
-#* \\ Function to add an item to the list
-def add_item():
-    item = entry.get()
-    if item:
-        list_var.append(item)
-        entry.delete(0, tk.END)
-
-#* \\ Function to remove an item from the list
-def remove_item():
-    item = entry.get()
-    if item:
-        list_var.remove(item)
-        entry.delete(0, tk.END)
-
-#* \\ Entry widget for user input
-entry = GTG.Entry(root)
-entry.pack(pady=10)
-
-#* \\ buttons to add/remove items
-add_button = GTG.Button(root, text="Add Item", command=add_item)
-add_button.pack(pady=5)
-
-remove_button = GTG.Button(root, text="Remove Item", command=remove_item)
-remove_button.pack(pady=5)
-file_var = GTG.FileVar(callback=file_changed_callback)
-
-#* \\ Label to display the selected file path
-label = GTG.Label(root, text="Selected File: ")
-label.pack(pady=10)
-file_var.bind_to_widget(label) # \\ Bind the FileVar to the Label
-
-#* \\ Function to open a file dialog and set the selected file path
-def select_file():
-    file_path = filedialog.askopenfilename(
-        title="Select a file",
-        filetypes=(("Text Files", "*.txt"), ("All Files", "*.*"))
-    )
+def open_file_dialog():
+    # Open the CustomFileDialog when the button is clicked
+    dialog = FileDialog(root)
+    root.wait_window(dialog)  # Wait until the dialog is closed before proceeding
+    
+    file_path = dialog.get_file_path()
     if file_path:
-        file_var.set_value(file_path)
+        print(f"Selected file: {file_path}")
+    else:
+        print("No file selected.")
 
-#* \\ Button to open the file dialog
-select_button = GTG.Button(root, text="Select File", command=select_file)
-select_button.pack(pady=10)
+# Create a button in the main window to open the file dialog
+open_button = tk.Button(root, text="Open File Dialog", command=open_file_dialog)
+open_button.pack(pady=20)
 
-
-#* \\ DateTimeVar instance
-datetime_var = GTG.DateTimeVar(callback=datetime_changed_callback)
-
-#* \\ Label to display the current date and time
-label = GTG.Label(root, text="Current Datetime: ")
-label.pack(pady=10)
-datetime_var.bind_to_widget(label) #* \\ Bind the DateTimeVar to the Label
-
-#* \\ Function to update the date and time
-def update_datetime():
-    new_datetime = GTGDateTime.now()
-    datetime_var.set_value(new_datetime)
-
-#* \\ Create a Button to update the date and time
-update_button = GTG.Button(root, text="Update Datetime", command=update_datetime)
-update_button.pack(pady=10)
-
-root.mainloop() 
-
-
-#!------------------------------------------------------------------------------------------------------------------------------
-
-
-# !Color pick Variable use case 
-
-#* \\ Callback function to be triggered when the ColorVar changes
-def color_changed_callback(new_value):
-    print(f"Selected color: {new_value}")
-
-root = tk.Tk()
-root.title("ColorVar with CustomColorPicker Example")
-
-color_var = GTG.ColorVar(callback=color_changed_callback)
-
-label = GTG.Label(root, text="Selected Color: ")
-label.pack(pady=10)
-
-#* \\ Bind the ColorVar to the Label
-color_var.bind_to_widget(label)
-
-#* \\ CustomColorPicker instance
-color_picker = CustomColorPicker(color_var.set_value)
-
-def open_color_picker():
-    color_picker.open_picker()
-
-select_button = GTG.Button(root, text="Pick Color", command=open_color_picker)
-select_button.pack(pady=10)
-root.mainloop() 
-
-
-
-#!------------------------------------------------------------------------------------------------------------------------------
-
-#! datetime Variable Use Case
-if __name__ == "__main__":
-    root = tk.Tk()
-
-    # Create a DateTimeVar with the current time
-    dt_var = GTG.DateTimeVar()
-
-    # Bind it to a Label
-    label = GTG.Label(root, text="Current Date and Time:")
-    label.pack()
-    dt_var.bind_to_widget(label)
-
-    # Update the value after 1 second
-    def update_time():
-        dt_var.set_value(GTGDateTime.now())
-        root.after(1000, update_time)  # Schedule the next update
-
-    update_time()  # Start the update loop
-
-    root.mainloop()
+# Start the Tkinter event loop
+root.mainloop()
