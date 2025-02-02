@@ -1,4 +1,4 @@
-# GTG Widget Descriptions
+# GTG Widget Descriptions 
 ------------------------------------------------
 
 ## GTG.Button Overview
