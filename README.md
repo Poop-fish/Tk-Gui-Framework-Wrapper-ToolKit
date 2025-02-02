@@ -3,6 +3,27 @@ Everything is a work in progress and some widgets might be buggy and may not wor
 That being said i am by no means a expert on Gui or frameworks/ToolKits. 
 Making projects like this helps me improve my coding skills :) 
 
+# Project Name
+
+## Description
+A brief description of your project. Explain what it does, its purpose, and any key features.
+
+---
+
+## Installation
+
+### Prerequisites
+Make sure you have the following installed:
+- Python 3.x
+- Tkinter (usually comes pre-installed with Python)
+- Pillow (PIL)
+- Pygments
+
+### Installing Dependencies
+You can install the required Python packages using pip:
+
+- pip install pillow pygments
+
 
 # Custom GUI Framework
 
