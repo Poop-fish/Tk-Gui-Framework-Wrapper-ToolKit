@@ -41,31 +41,31 @@ from GTG_Extended_Widgets import FileDialog , SidePanel , Tooltip
 
 #!------------ || Side Panel Widget Example ||----------------------
 
-# root = tk.Tk()
-# root.title("Side Panel Example")
-# root.geometry("800x600")
+root = tk.Tk()
+root.title("Side Panel Example")
+root.geometry("800x600")
 
-# side_panel = SidePanel(root, width=200, height=500,bg="lightgray", open_state=True ,)
-# side_panel._build()  #* \\ Build the side panel and its toggle button 
-
-
-# #* \\ Example: Add a GTG.label to the side panel
-# label = GTG.Label(side_panel.panel, text="This is a side panel", bg="lightgray")
-# label.pack(pady=100)
-
-# #* \\ Example: Create and Add GTG.Listbox widget to side panel
-# listbox = GTG.Listbox(side_panel.panel)
-# listbox.pack(pady=5)
-# listbox.insert(0, "Item 1")
-# listbox.insert(1, "Item 2")
-# listbox.insert(2, "Item 3")
+side_panel = SidePanel(root, width=200, height=500,bg="lightgray", open_state=True ,)
+side_panel._build()  #* \\ Build the side panel and its toggle button 
 
 
-# #* \\ Example: Add a button to the side panel
-# button = GTG.Button(side_panel.panel, text="Click Me", bg="white")
-# button.pack(pady=10) 
+#* \\ Example: Add a GTG.label to the side panel
+label = GTG.Label(side_panel.panel, text="This is a side panel", bg="lightgray")
+label.pack(pady=100)
 
-# root.mainloop() 
+#* \\ Example: Create and Add GTG.Listbox widget to side panel
+listbox = GTG.Listbox(side_panel.panel)
+listbox.pack(pady=5)
+listbox.insert(0, "Item 1")
+listbox.insert(1, "Item 2")
+listbox.insert(2, "Item 3")
+
+
+#* \\ Example: Add a button to the side panel
+button = GTG.Button(side_panel.panel, text="Click Me", bg="white")
+button.pack(pady=10) 
+
+root.mainloop() 
 
 
 # #!------------ || Paned Window Widget Example ||----------------------
@@ -100,25 +100,25 @@ from GTG_Extended_Widgets import FileDialog , SidePanel , Tooltip
 
 #!-------------------------------------------------------------------------------------------------
 
-#! CustomFile Dialog example 
-root = tk.Tk()
-root.title("Main Window")
-root.geometry("400x300")
+# #! CustomFile Dialog example 
+# root = tk.Tk()
+# root.title("Main Window")
+# root.geometry("400x300")
 
-def open_file_dialog():
-    # Open the CustomFileDialog when the button is clicked
-    dialog = FileDialog(root)
-    root.wait_window(dialog)  # Wait until the dialog is closed before proceeding
+# def open_file_dialog():
+#     # Open the CustomFileDialog when the button is clicked
+#     dialog = FileDialog(root)
+#     root.wait_window(dialog)  # Wait until the dialog is closed before proceeding
     
-    file_path = dialog.get_file_path()
-    if file_path:
-        print(f"Selected file: {file_path}")
-    else:
-        print("No file selected.")
+#     file_path = dialog.get_file_path()
+#     if file_path:
+#         print(f"Selected file: {file_path}")
+#     else:
+#         print("No file selected.")
 
-# Create a button in the main window to open the file dialog
-open_button = tk.Button(root, text="Open File Dialog", command=open_file_dialog)
-open_button.pack(pady=20)
+# # Create a button in the main window to open the file dialog
+# open_button = GTG.Button(root, text="Open File Dialog", command=open_file_dialog)
+# open_button.pack(pady=20)
 
-# Start the Tkinter event loop
-root.mainloop()
+# # Start the Tkinter event loop
+# root.mainloop() 
