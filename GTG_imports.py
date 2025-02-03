@@ -62,7 +62,7 @@ from pygments.token import Token
 
 # --------------------- 
 
-# TODO :Need to  Organize these imports 
+# TODO : Need to Organize these imports and remove doubles 
 import time
 import inspect
 import random
@@ -72,9 +72,6 @@ from pygments.lexers import PythonLexer
 from pygments.token import Token
 from pygments.style import Style
 from pygments.styles import get_style_by_name 
-
-
-
 
 
 from datetime import datetime
