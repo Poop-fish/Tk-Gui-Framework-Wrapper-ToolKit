@@ -684,7 +684,7 @@ The widget supports the following optional parameters:
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 
 
-## Overview
+## GTG.Scale Overview
 `GTG.Scale` widget extends Tkinter's `tk.Scale` by adding hover and click effects. It also allows dynamic customization of colors and orientation.
 
 ## Features
@@ -780,7 +780,7 @@ class MyScale(tk.Scale):
 ## Usage Example
 ```python
 root = tk.Tk()
-scale = MyScale(root, enable_hover=True, enable_click_effect=True)
+scale = GTGScale(root, enable_hover=True, enable_click_effect=True)
 scale.pack(pady=10)
 root.mainloop()
 ```
