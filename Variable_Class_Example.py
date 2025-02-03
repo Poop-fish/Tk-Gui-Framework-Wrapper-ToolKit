@@ -48,7 +48,7 @@ class Color(Enum):
 
 root = tk.Tk()
 
-# C\\ reate an EnumVar with the Color enum
+# \\ Create an EnumVar with the Color enum
 enum_var = GTG.EnumVar(enum_type=Color, value=Color.RED.value)
 
 # \\ Create a label and an OptionMenu
