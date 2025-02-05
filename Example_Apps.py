@@ -1,7 +1,192 @@
 from GTG_Widgets import GTG 
 from GTG_DateTime_Module import *
 from GTG_imports import *
-from GTG_Extended_Widgets import SidePanel
+from GTG_Extended_Widgets import SidePanel 
+from GTG_iterables import GTG_range , GTG_string
+
+
+#! ----------------------- Text Editor Example -----------------------------------------------------
+
+class TextEditor:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("GTG NotePad")
+        self.root.geometry("600x400")
+        self.root.resizable(True, True)
+
+        # \\ Create the notebook for tabbed interface
+        self.notebook = GTG.Notebook(root, enable_hover=True, hover_background="red", 
+                            default_background="gray", foreground="black", font=("Arial", 12))
+        self.notebook.pack(expand=True, fill="both")
+
+        # \\ Add a default tab
+        self.add_tab("Untitled")
+
+        # \\ Create the menu bar
+        self.menu_bar = GTG.Menu(root)
+        self.root.configure(menu=self.menu_bar)
+
+        # \\ File menu
+        file_menu = GTG.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="File", menu=file_menu)
+        file_menu.add_command(label="New", command=self.new_file)
+        file_menu.add_command(label="Open", command=self.open_file)
+        file_menu.add_command(label="Save", command=self.save_file)
+        file_menu.add_command(label="Save As", command=self.save_file_as)
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=self.root.quit)
+
+        # \\ Edit menu
+        edit_menu = GTG.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Edit", menu=edit_menu)
+        edit_menu.add_command(label="Clear", command=self.clear_text)
+
+        # \\ Format menu
+        format_menu = GTG.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Format", menu=format_menu)
+        format_menu.add_command(label="Bold", command=self.toggle_bold)
+        format_menu.add_command(label="Font Size", command=self.change_font_size)
+
+    def add_tab(self, title):
+        """Add a new tab to the notebook."""
+        frame = GTG.Frame(self.notebook , bg="lime",  relief="groove")
+        text_area = GTG.Text(frame,insertbackground="yellow", fg="lime", bg="black",wrap="word", font=("Arial", 12) , highlightbackground="pink", highlightcolor="pink", highlightthickness=20)
+        text_area.pack(fill=tk.BOTH, expand=True)
+        self.notebook.add(frame, text=title)
+        self.notebook.select(frame)  # \\ Focus on the new tab
+
+    def get_current_tab(self):
+        """Get the current tab's text area and frame."""
+        current_tab = self.notebook.select()
+        if current_tab:
+            frame = self.notebook.nametowidget(current_tab)
+            text_area = frame.winfo_children()[0]  # \\  Text area is the first child
+            return text_area, frame
+        return None, None
+
+    def new_file(self):
+        """Create a new file in a new tab."""
+        self.add_tab("Untitled")
+
+    def open_file(self):
+        """Open a text file and load its content into a new tab."""
+        file_path = filedialog.askopenfilename(
+            filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+        )
+        if file_path:
+            try:
+                with open(file_path, "r") as file:
+                    content = file.read()
+                tab_title = file_path.split("/")[-1]  # \\ Use the file name as the tab title
+                self.add_tab(tab_title)
+                text_area, _ = self.get_current_tab()
+                text_area.insert(tk.END, content)
+            except Exception as e:
+                GTG.showerror(self.root, "Error", f"Failed to open file: {e}")
+
+    def save_file(self):
+        """Save the current tab's content to the associated file."""
+        text_area, frame = self.get_current_tab()
+        if not text_area:
+            return
+
+        tab_title = self.notebook.tab(self.notebook.select(), "text")
+        if tab_title == "Untitled":
+            self.save_file_as()
+        else:
+            self._save_to_file(tab_title, text_area.get(1.0, tk.END))
+
+    def save_file_as(self):
+        """Save the current tab's content to a new file."""
+        text_area, frame = self.get_current_tab()
+        if not text_area:
+            return
+
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".txt",
+            filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+        )
+        if file_path:
+            self._save_to_file(file_path, text_area.get(1.0, tk.END))
+            tab_title = file_path.split("/")[-1]
+            self.notebook.tab(frame, text=tab_title)
+
+    def _save_to_file(self, file_path, content):
+        """Helper method to save text to a file."""
+        try:
+            with open(file_path, "w") as file:
+                file.write(content)
+            GTG.showinfo(self.root, "Success", f"File saved: {file_path}")
+        except Exception as e:
+            GTG.showerror(self.root, "Error", f"Failed to save file: {e}")
+
+    def clear_text(self):
+        """Clear the current tab's text area."""
+        text_area, _ = self.get_current_tab()
+        if text_area:
+            text_area.delete(1.0, tk.END)
+
+    def toggle_bold(self):
+        """Toggle bold formatting for selected text in the current tab."""
+        text_area, _ = self.get_current_tab()
+        if text_area:
+            try:
+                current_tags = text_area.tag_names("sel.first")
+                if "bold" in current_tags:
+                    text_area.tag_remove("bold", "sel.first", "sel.last")
+                else:
+                    text_area.tag_add("bold", "sel.first", "sel.last")
+                    text_area.tag_configure("bold", font=("Arial", 12, "bold"))
+            except tk.TclError:
+                GTG.showwarning(self.root, title="No Selection", message="Please select text to apply bold formatting.")
+
+    def change_font_size(self):
+        """Open a pop-up to change the font size of the text in the current tab."""
+        text_area, _ = self.get_current_tab()
+        if not text_area:
+            return
+        popup = GTG.Toplevel(self.root , default_bg="lime" ,relief="groove")
+        popup.title("Font Size")
+        popup.geometry("300x250")
+        label_font_size = GTG.Label(popup, text="Enter font size (8-72):")
+        label_font_size.pack(pady=10)
+        entry_font_size = GTG.Entry(popup, bg="black" , fg="lime")
+        entry_font_size.pack(pady=10)
+
+        # \\ Function to apply the font size
+        def apply_font_size():
+            try:
+                new_size = int(entry_font_size.get())
+                if 8 <= new_size <= 72:
+                    text_area.configure(font=("Arial", new_size))
+                    popup.destroy()  
+                else:
+                    GTG.showerror(popup,title="Invalid Size", message="Font size must be between 8 and 72.")
+            except ValueError:
+                GTG.showerror(popup,title="Invalid Input", message="Please enter a valid integer.")
+
+        apply_button = GTG.Button(popup, text="Apply", command=apply_font_size)
+        apply_button.pack(pady=10)
+
+# \\ Build and root app to tk window 
+def NotePad_Example():
+    
+    root = tk.Tk()
+    
+    app = TextEditor(root)
+    
+    root.mainloop() 
+
+if __name__ == "__main__":
+    NotePad_Example()
+
+#! ----------------------- End of Text Editor Example -----------------------------------------------------
+
+
+
+
+
+
 #! ----------------------- To Do list App -----------------------------------------------------
 # class TodoList(GTG.Frame):
 #     def __init__(self, parent, **kwargs):
@@ -100,7 +285,7 @@ from GTG_Extended_Widgets import SidePanel
 
 
 
-# #! ----------------------- Stop Watch App -----------------------------------------------------
+#! ----------------------- Stop Watch App -----------------------------------------------------
 
 # class Stopwatch(GTG.Frame):
 #     def __init__(self, parent, **kwargs):
@@ -110,9 +295,11 @@ from GTG_Extended_Widgets import SidePanel
 #         self.running = False
 #         self.start_time = None
 #         self.elapsed_time = GTGDateTime(0, 1, 1, 0, 0, 0)  #* \\ Initialize elapsed time to 00:00:00
+       
 #         #* \\ Frame to hold the buttons
 #         self.button_frame = GTG.Frame(self)
 #         self.button_frame.pack(pady=5)
+        
 #         #* \\ Label to display the time
 #         self.time_label = GTG.Label(self, text="00:00:00", font=("Arial", 24), bg="#2b2b2b", fg="white")
 #         self.time_label.pack(pady=10)
@@ -194,7 +381,7 @@ from GTG_Extended_Widgets import SidePanel
 
 # root.mainloop()
 
-# #! ----------------------- END of Stop Watch Example -----------------------------------------------------
+# # #! ----------------------- END of Stop Watch Example -----------------------------------------------------
 
 
 # class Calculator:
@@ -204,15 +391,14 @@ from GTG_Extended_Widgets import SidePanel
 #         self.root.geometry("300x400")
 #         self.root.resizable(False, False)
 
-#         #* \\ Variable to store the current input
-#         self.input_var = tk.StringVar(value="")
+#         # \\ Variable to store the current input
+#         self.input_var = GTG.StringVar(value="")
 
-#         #* \\ Create the display
-#         self.display = GTG.Entry(root, enable_hover=False, font=("Arial", 18), justify="right")
+#         # \\ Create the display
+#         self.display = GTG.Entry(root, font=("Arial", 18), justify="right")
 #         self.display.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-#         self.display.configure(textvariable=self.input_var)
+#         self.input_var.bind_to_widget(self.display) 
 
-#         #* \\ Create buttons
 #         buttons = [
 #             ("7", 1, 0), ("8", 1, 1), ("9", 1, 2), ("/", 1, 3),
 #             ("4", 2, 0), ("5", 2, 1), ("6", 2, 2), ("*", 2, 3),
@@ -221,11 +407,11 @@ from GTG_Extended_Widgets import SidePanel
 #             ("C", 5, 0, 1, 4)  
 #         ]
 
-#         #* \\ Create a frame for the buttons
-#         button_frame = GTG.Frame(root, enable_hover=False)
+#         # \\ Create a frame for the buttons
+#         button_frame = GTG.Frame(root)
 #         button_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-#         #* \\ Add buttons to the frame
+#         # \\ Add buttons to the frame
 #         for button in buttons:
 #             text, row, col = button[0], button[1], button[2]
 #             colspan = button[3] if len(button) > 3 else 1
@@ -234,20 +420,17 @@ from GTG_Extended_Widgets import SidePanel
 #             btn = GTG.Button(
 #                 button_frame,
 #                 text=text,
-#                 enable_hover=True,
 #                 bg="red" if text == "C" else "#f0f0f0",
 #                 fg="black",
-#                 hover_bg="#ff7d7d" if text == "C" else "#d9d9d9",
-#                 hover_fg="lime",
 #                 font=("Arial", 14),
 #                 command=lambda t=text: self.on_button_click(t)
 #             )
 #             btn.grid(row=row, column=col, columnspan=colspan, rowspan=rowspan, sticky="nsew", padx=5, pady=5)
 
-#          #* \\ Configure grid weights
-#         for i in range(6):
+#         # \\ Configure grid weights using GTG_range
+#         for i in GTG_range(0, 6):  
 #             button_frame.grid_rowconfigure(i, weight=1)
-#         for j in range(4):
+#         for j in GTG_range(0, 4):  
 #             button_frame.grid_columnconfigure(j, weight=1)
 
 #     def on_button_click(self, text):
@@ -255,128 +438,21 @@ from GTG_Extended_Widgets import SidePanel
 #         current_input = self.input_var.get()
 
 #         if text == "C":
-#             self.input_var.set("")   #* \\ Clear the input
+#             self.input_var.set("")   
 #         elif text == "=":
 #             try:
-#                 result = str(eval(current_input))  #* \\ Evaluate the expression
+#                 result = str(eval(current_input))  
 #                 self.input_var.set(result)
 #             except Exception as e:
-#                 self.input_var.set("Error")   #* \\ Handle errors
+#                 self.input_var.set("Error")   
 #         else:
-#             self.input_var.set(current_input + text)   #* \\ Append the button text to the input
+#             self.input_var.set(current_input + text) 
 
-
-# #! Adding to a tkinter window 
+# #! Example adding to a tk window 
 # if __name__ == "__main__":
 #     root = tk.Tk()
 #     app = Calculator(root)
 #     root.mainloop()
 
-
-
-# # #! ----------------------- Text Editor Example -----------------------------------------------------
-
-
-import tkinter as tk
-from tkinter import filedialog, messagebox
-
-class TextEditor:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Simple Text Editor")
-        self.root.geometry("600x400")
-        self.root.resizable(True, True)
-
-        #* \\ Variable to store the current file path
-        self.current_file = None
-
-        #* \\ Create the menu bar
-        self.menu_bar = GTG.Menu(root, enable_hover=True)
-        self.root.configure(menu=self.menu_bar)
-
-        #* \\ File menu
-        file_menu = GTG.Menu(self.menu_bar, enable_hover=True , hover_bg="lime")
-        self.menu_bar.add_cascade(label="File", menu=file_menu)
-        file_menu.add_command(label="Open", command=self.open_file)
-        file_menu.add_command(label="Save", command=self.save_file)
-        file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.root.quit)
-
-        #* \\ Edit menu
-        edit_menu = GTG.Menu(self.menu_bar, enable_hover=True, hover_bg="lime")
-        self.menu_bar.add_cascade(label="Edit", menu=edit_menu)
-        edit_menu.add_command(label="Clear", command=self.clear_text)
-
-        #* \\ Format menu
-        format_menu = GTG.Menu(self.menu_bar, enable_hover=True,hover_bg="lime")
-        self.menu_bar.add_cascade(label="Format", menu=format_menu)
-        format_menu.add_command(label="Bold", command=self.toggle_bold)
-        format_menu.add_command(label="Font Size", command=self.change_font_size)
-
-        #* \\ Create the text area
-        self.text_area = GTG.Text(root, enable_hover=True, wrap="word")
-        self.text_area.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-
-        #* \\ Configure default font
-        self.current_font = ("Arial", 12)
-        self.text_area.configure(font=self.current_font)
-
-    def open_file(self):
-        """Open a text file and load its content into the text area."""
-        file_path = filedialog.askopenfilename(
-            filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
-        )
-        if file_path:
-            try:
-                with open(file_path, "r") as file:
-                    self.text_area.delete(1.0, tk.END)  #* \\ Clear the text area
-                    self.text_area.insert(tk.END, file.read())  #* \\ Insert file content
-                self.current_file = file_path
-                self.status_bar.configure(text=f"Opened: {file_path}")
-            except Exception as e:
-                messagebox.showerror("Error", f"Failed to open file: {e}")
-
-    def save_file(self):
-        """Save the current text to a file."""
-        if self.current_file:
-            file_path = self.current_file
-        else:
-            file_path = filedialog.asksaveasfilename(
-                defaultextension=".txt",
-                filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
-            )
-        if file_path:
-            try:
-                with open(file_path, "w") as file:
-                    file.write(self.text_area.get(1.0, tk.END))  #* \\ Write text to file
-                self.current_file = file_path
-                self.status_bar.configure(text=f"Saved: {file_path}")
-            except Exception as e:
-                messagebox.showerror("Error", f"Failed to save file: {e}")
-
-    def clear_text(self):
-        """Clear the text area."""
-        self.text_area.delete(1.0, tk.END)
-        self.status_bar.configure(text="Text cleared")
-
-    def toggle_bold(self):
-        """Toggle bold formatting for selected text."""
-        current_font = self.text_area.cget("font")
-        new_font = ("Arial", 12, "bold") if "bold" not in current_font else ("Arial", 12)
-        self.text_area.configure(font=new_font)
-
-    def change_font_size(self):
-        """Change the font size of the text."""
-        new_size = simpledialog.askinteger("Font Size", "Enter font size:", minvalue=8, maxvalue=72)
-        if new_size:
-            self.current_font = ("Arial", new_size)
-            self.text_area.configure(font=self.current_font)
-
-
-#* \\ Run the text editor 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = TextEditor(root)
-    root.mainloop()
 
 
