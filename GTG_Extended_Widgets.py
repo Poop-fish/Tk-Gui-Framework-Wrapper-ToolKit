@@ -1,7 +1,7 @@
 from GTG_imports import * 
 from GTG_Widgets import GTG , GTGDateTime
 
-#! ------------------------------------ Custom Widgets (apps) Made With GTG Gui ----------------------------------------------------------------------------------
+#! ------------------------------------ Custom Widgets Made With GTG Gui ----------------------------------------------------------------------------------
     
 class FileDialog(GTG.Toplevel):
     def __init__(self, parent, initialdir=None, title="Select File"):
@@ -143,7 +143,7 @@ class Tooltip:
         ) 
         label.pack()
 
-
+#! ----------------------------------------------------------------------------------------------------------------------
 class SidePanel:
     def __init__(self, root, width=200, height=500, x=0, y=0, bg="gray", open_state=True, Frame="raised"):
         self.root = root
@@ -215,3 +215,109 @@ class SidePanel:
 
     def stop_drag(self, event):
         self.dragging = False 
+
+#! ----------------------------------------------------------------------------------------------------------------------
+
+class GTGScrolledText(GTG.Frame):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent)
+
+        # \\ Create a Text widget
+        self.text = GTG.Text(self, **kwargs)
+        self.text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # \\ Create a Scrollbar
+        self.scrollbar = GTG.Scrollbar(self, command=self.text.yview)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # \\ Link the scrollbar to the text widget
+        self.text.config(yscrollcommand=self.scrollbar.set)
+
+    def insert(self, *args):
+        """Forward the insert method to the Text widget."""
+        self.text.insert(*args)
+
+    def delete(self, *args):
+        """Forward the delete method to the Text widget."""
+        self.text.delete(*args)
+
+    def get(self, *args):
+        """Forward the get method to the Text widget."""
+        return self.text.get(*args) 
+ #! ----------------------------------------------------------------------------------------------------------------------   
+import math
+class CircularSlider(tk.Canvas):
+    def __init__(self, parent, radius=50, min_value=0, max_value=100, start_angle=-90, tick_count=10, knob_shape="circle", knob_image=None, **kwargs):
+        super().__init__(parent, width=2*radius+20, height=2*radius+20, bg=kwargs.get('bg', 'white'), highlightthickness=0)
+        
+        self.radius = radius
+        self.min_value = min_value
+        self.max_value = max_value
+        self.start_angle = start_angle
+        self.angle = start_angle
+        self.knob_radius = kwargs.get('knob_radius', 10)
+        self.value = min_value
+        self.tick_count = tick_count
+        self.knob_shape = knob_shape
+        self.knob_image_path = knob_image
+        self.knob_image = None
+        
+        if self.knob_image_path:
+            image = Image.open(self.knob_image_path)
+            image = image.resize((2*self.knob_radius, 2*self.knob_radius), Image.LANCZOS)
+            self.knob_image = ImageTk.PhotoImage(image)
+        
+        self.center = (self.radius + 10, self.radius + 10)
+        
+        self.track_color = kwargs.get('track_color', '#7f7f7f')
+        self.knob_color = kwargs.get('knob_color', 'black')
+        self.tick_color = kwargs.get('tick_color', 'black')
+        
+        self.draw_slider()
+        self.bind("<B1-Motion>", self.move_knob)
+        self.bind("<Button-1>", self.move_knob)
+    
+    def draw_slider(self):
+        self.delete("all")
+        
+        self.create_oval(10, 10, 10 + 2*self.radius, 10 + 2*self.radius, outline=self.track_color, width=5)
+        self.draw_ticks()
+        
+        knob_x = self.center[0] + self.radius * math.cos(math.radians(self.angle))
+        knob_y = self.center[1] + self.radius * math.sin(math.radians(self.angle))
+        
+        if self.knob_image:
+            self.create_image(knob_x, knob_y, image=self.knob_image, tags="knob")
+        elif self.knob_shape == "circle":
+            self.create_oval(knob_x - self.knob_radius, knob_y - self.knob_radius,
+                             knob_x + self.knob_radius, knob_y + self.knob_radius,
+                             fill=self.knob_color, outline="black", width=2, tags="knob")
+        elif self.knob_shape == "square":
+            self.create_rectangle(knob_x - self.knob_radius, knob_y - self.knob_radius,
+                                  knob_x + self.knob_radius, knob_y + self.knob_radius,
+                                  fill=self.knob_color, outline="black", width=2, tags="knob")
+    
+    def draw_ticks(self):
+        for i in range(self.tick_count):
+            tick_angle = self.start_angle + (i / (self.tick_count - 1)) * 360
+            inner_x = self.center[0] + (self.radius - 10) * math.cos(math.radians(tick_angle))
+            inner_y = self.center[1] + (self.radius - 10) * math.sin(math.radians(tick_angle))
+            outer_x = self.center[0] + self.radius * math.cos(math.radians(tick_angle))
+            outer_y = self.center[1] + self.radius * math.sin(math.radians(tick_angle))
+            self.create_line(inner_x, inner_y, outer_x, outer_y, fill=self.tick_color, width=2)
+    
+    def move_knob(self, event):
+        dx, dy = event.x - self.center[0], event.y - self.center[1]
+        angle = math.degrees(math.atan2(dy, dx))
+        
+        if angle < 0:
+            angle += 360
+        
+        self.angle = angle
+        self.value = self.min_value + ((self.angle - self.start_angle) % 360) / 360 * (self.max_value - self.min_value)
+        
+        self.draw_slider()
+        print(f"Value: {self.get_value()}")
+    
+    def get_value(self):
+        return round(self.value)
