@@ -684,7 +684,7 @@ The widget supports the following optional parameters:
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 
 
-## GTG.Scale Overview
+## Overview
 `GTG.Scale` widget extends Tkinter's `tk.Scale` by adding hover and click effects. It also allows dynamic customization of colors and orientation.
 
 ## Features
@@ -780,7 +780,7 @@ class MyScale(tk.Scale):
 ## Usage Example
 ```python
 root = tk.Tk()
-scale = GTGScale(root, enable_hover=True, enable_click_effect=True)
+scale = MyScale(root, enable_hover=True, enable_click_effect=True)
 scale.pack(pady=10)
 root.mainloop()
 ```
@@ -793,3 +793,138 @@ The widget allows customization of the following properties:
 
 ## Conclusion
 `GTG.Scale` widget enhances the standard `tk.Scale` by adding interactive hover and click effects, making it more visually responsive and customizable.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+## GTG.Messabox Overview
+
+The `MessageBox` class extends Tkinter's `Toplevel` to create a customizable message dialog with different message types and button options. This widget allows for information display, warnings, errors, and user confirmation dialogs.
+
+## Features
+
+- **Customizable Messages**: Displays any message with a specified title.
+- **Message Types**: Supports `info`, `error`, and `warning` messages.
+- **Button Options**: Allows defining multiple buttons with custom labels.
+- **User Interaction**: Returns button click responses to handle user choices.
+- **Reusable Helper Methods**: Provides static methods for common dialog types like `showinfo`, `showerror`, `showwarning`, `askyesno`, and `askokcancel`.
+
+## Implementation
+
+```python
+import tkinter as tk
+
+class MessageBox(tk.Toplevel):
+    def __init__(self, parent, title, message, message_type="info", buttons=["OK"], **kwargs):
+        super().__init__(parent, **kwargs)
+        self.parent = parent
+        self.title(title)
+        self.message = message
+        self.message_type = message_type
+        self.buttons = buttons
+
+        self.configure(bg="#7f7f7f", padx=20, pady=20)
+        self.resizable(False, False)
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        message_label = tk.Label(self, text=self.message, bg="#7f7f7f", fg="red", font=("Arial", 12))
+        message_label.pack(pady=10)
+
+        button_frame = tk.Frame(self, bg="#7f7f7f")
+        button_frame.pack(pady=10)
+
+        for button_text in self.buttons:
+            button = tk.Button(button_frame, text=button_text, command=lambda bt=button_text: self.on_button_click(bt), bg="red")
+            button.pack(side=tk.LEFT, padx=5)
+
+    def on_button_click(self, button_text):
+        """Handle button clicks and close the message box."""
+        self.destroy()
+        return button_text
+
+    # Helper methods for common message box types
+    @staticmethod
+    def showinfo(parent, title, message):
+        """Display an info message box."""
+        dialog = MessageBox(parent, title, message, message_type="info")
+        parent.wait_window(dialog)
+
+    @staticmethod
+    def showerror(parent, title, message):
+        """Display an error message box."""
+        dialog = MessageBox(parent, title, message, message_type="error")
+        parent.wait_window(dialog)
+
+    @staticmethod
+    def showwarning(parent, title, message):
+        """Display a warning message box."""
+        dialog = MessageBox(parent, title, message, message_type="warning")
+        parent.wait_window(dialog)
+
+    @staticmethod
+    def askyesno(parent, title, message):
+        """Display a yes/no confirmation dialog."""
+        dialog = MessageBox(parent, title, message, buttons=["Yes", "No"])
+        return dialog.on_button_click("Yes") if dialog.on_button_click("Yes") else False
+
+    @staticmethod
+    def askokcancel(parent, title, message):
+        """Display an OK/Cancel confirmation dialog."""
+        dialog = MessageBox(parent, title, message, buttons=["OK", "Cancel"])
+        return dialog.on_button_click("OK") if dialog.on_button_click("OK") else False
+```
+
+## Explanation
+
+### Constructor (`__init__`)
+
+- Accepts parameters:
+  - `parent`: The main Tkinter window.
+  - `title`: The title of the dialog.
+  - `message`: The message displayed in the dialog.
+  - `message_type`: Defines the message type (e.g., info, warning, error).
+  - `buttons`: A list of button labels for user interaction.
+- Configures the background color, padding, and disables window resizing.
+- Calls `create_widgets()` to set up UI elements.
+
+### `create_widgets()`
+
+- Creates a label to display the message.
+- Adds a frame to contain buttons.
+- Iterates through `buttons` and creates them dynamically, binding each button click to `on_button_click()`.
+
+### `on_button_click()`
+
+- Closes the message box and returns the button text clicked by the user.
+
+### Static Methods for Common Dialogs
+
+- **`showinfo()`**: Displays an informational message box.
+- **`showerror()`**: Displays an error message box.
+- **`showwarning()`**: Displays a warning message box.
+- **`askyesno()`**: Displays a Yes/No confirmation dialog and returns a boolean.
+- **`askokcancel()`**: Displays an OK/Cancel confirmation dialog and returns a boolean.
+
+## Usage Example
+
+```python
+root = tk.Tk()
+GTG.showinfo(root, title="Info", message="This is an informational message.")
+GTG.showerror(root, title= "Error", message="An error has occurred! uh oh")
+GTG.showwarning(root, title="Warning", message="This is a warning message.")
+response = GTG.askyesno(root, title="Confirm", message="Do you want to proceed?")
+print("User response:", response)
+root.mainloop()
+```
+
+## Customization Options
+
+- **Background and Foreground Colors**: Modify the dialog appearance.
+- **Buttons**: Define custom buttons for different interactions.
+- **Message Type**: Change the message type to suit different scenarios.
+
+## Conclusion
+
+The `MessageBox` class provides a flexible and interactive way to display messages in a Tkinter application. It enhances the default Tkinter message dialogs with customizable UI elements and reusable helper methods for common dialog types.
+
