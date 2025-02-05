@@ -780,7 +780,7 @@ class MyScale(tk.Scale):
 ## Usage Example
 ```python
 root = tk.Tk()
-scale = MyScale(root, enable_hover=True, enable_click_effect=True)
+scale = GTG.Scale(root, enable_hover=True, enable_click_effect=True)
 scale.pack(pady=10)
 root.mainloop()
 ```
