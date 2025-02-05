@@ -1,6 +1,6 @@
 from GTG_imports import tk , ttk 
 from GTG_imports import *
-from datetime import datetime
+# from datetime import datetime
 from GTG_DateTime_Module import *
 
 class GTG:
@@ -57,7 +57,7 @@ class GTG:
 #! -------------------------------------------------------------------------------------------------------------------------
     class Label(tk.Label):
         def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, 
-                    font=None, borderwidth=None, relief=None, padx=None, pady=None, **kwargs):
+                    font=None, borderwidth=None, frame=None, padx=None, pady=None, **kwargs):
             super().__init__(parent, **kwargs)
             
             # Default values
@@ -67,7 +67,7 @@ class GTG:
             self.default_hover_fg = fg if fg is not None else self.default_fg
             self.default_font = ("Arial", 12)
             self.default_borderwidth = 5
-            self.default_relief = "sunken"
+            self.default_frame = "sunken"
             self.default_padx = 10
             self.default_pady = 5
             
@@ -78,14 +78,14 @@ class GTG:
             self.hover_fg = hover_fg if hover_fg is not None else self.default_hover_fg
             self.font = font if font is not None else self.default_font
             self.borderwidth = borderwidth if borderwidth is not None else self.default_borderwidth
-            self.relief = relief if relief is not None else self.default_relief
+            self.relief = frame if frame is not None else self.default_frame
             self.padx = padx if padx is not None else self.default_padx
             self.pady = pady if pady is not None else self.default_pady
             
-            # Enable/disable hover effect
+            #* \\ Enable/disable hover effect
             self.enable_hover = enable_hover
             
-            # Configure the label
+            #* \\ Configure the label
             self.configure(
                 bg=self.bg,
                 fg=self.fg,
@@ -96,7 +96,7 @@ class GTG:
                 pady=self.pady
             )
             
-            # Bind hover events if enabled
+            #* \\ Bind hover events if enabled
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover)
                 self.bind("<Leave>", self.on_leave)
@@ -516,7 +516,7 @@ class GTG:
             self.destroy()
             return button_text
 
-    # \\ Helper methods for common message box types
+    # Helper methods for common message box types
     @staticmethod
     def showinfo(parent, title, message):
         """Display an info message box."""
@@ -546,6 +546,8 @@ class GTG:
         """Display an OK/Cancel confirmation dialog."""
         dialog = GTG.MessageBox(parent, title, message, buttons=["OK", "Cancel"])
         return dialog.on_button_click("OK") if dialog.on_button_click("OK") else False
+
+
 
 #! -------------------------------------------------------------------------------------------------------------------------
     class Spinbox(tk.Spinbox):
@@ -668,25 +670,77 @@ class GTG:
     
 #! -------------------------------------------------------------------------------------------------------------------------   
     class Notebook(ttk.Notebook):
-        def __init__(self, parent, enable_hover=True, **kwargs):
+        def __init__(self, parent, enable_hover=True, hover_background="light gray", 
+                    default_background="#7f7f7f", foreground="black", font=("Arial", 12), **kwargs):
             super().__init__(parent, **kwargs)
             self.enable_hover = enable_hover
+            self.hover_background = hover_background
+            self.default_background = default_background
+            self.foreground = foreground
+            self.font = font
 
+            # Configure the style for the notebook
             self.style = ttk.Style()
-            self.style.configure("Custom.TNotebook", background="#7f7f7f", foreground="black", font=("Arial", 12))
+            self.style.theme_use("alt")
+            # Configure the default tab style
+            self.style.configure("Custom.TNotebook", background=self.default_background)
+            self.style.configure("Custom.TNotebook.Tab", 
+                                background=self.default_background, 
+                                foreground=self.foreground, 
+                                font=self.font,
+                                padding=[10, 5])  # Add padding to tabs
 
+            # Configure the hover effect for tabs
             if self.enable_hover:
-                self.bind("<Enter>", self.on_hover)
-                self.bind("<Leave>", self.on_leave)
+                self.style.map("Custom.TNotebook.Tab",
+                            background=[("active", self.hover_background),
+                                        ("!active", self.default_background)])
 
-        def on_hover(self, event):
-            if self.enable_hover:
-                self.style.configure("Custom.TNotebook", background="light gray")
+            # Apply the custom style to the notebook
+            self.configure(style="Custom.TNotebook")
 
-        def on_leave(self, event):
-            if self.enable_hover:
-                self.style.configure("Custom.TNotebook", background="#7f7f7f")
-    
+            # Bind events for dragging tabs
+            self.bind("<ButtonPress-1>", self.on_tab_press)
+            self.bind("<ButtonRelease-1>", self.on_tab_release)
+            self.bind("<B1-Motion>", self.on_tab_drag)
+
+            # Bind double-click event for renaming tabs
+            self.bind("<Double-1>", self.on_tab_double_click)
+
+            self.dragged_tab = None
+
+        def on_tab_press(self, event):
+            """Called when a tab is clicked."""
+            tab_index = self.index(f"@{event.x},{event.y}")
+            if tab_index != -1:
+                self.dragged_tab = tab_index
+
+        def on_tab_release(self, event):
+            """Called when the mouse button is released."""
+            self.dragged_tab = None
+
+        def on_tab_drag(self, event):
+            """Called when a tab is being dragged."""
+            if self.dragged_tab is not None:
+                # Find the tab under the mouse cursor
+                target_tab_index = self.index(f"@{event.x},{event.y}")
+                if target_tab_index != -1 and target_tab_index != self.dragged_tab:
+                    # Move the dragged tab to the new position
+                    self.insert(target_tab_index, self.tabs()[self.dragged_tab])
+                    self.dragged_tab = target_tab_index
+
+        def on_tab_double_click(self, event):
+            """Called when a tab is double-clicked."""
+            tab_index = self.index(f"@{event.x},{event.y}")
+            if tab_index != -1:
+                self.rename_tab(tab_index)
+
+        def rename_tab(self, tab_index):
+            """Rename the tab at the given index."""
+            current_name = self.tab(tab_index, "text")
+            new_name = simpledialog.askstring("Rename Tab", "Enter new tab name:", initialvalue=current_name)
+            if new_name:
+                self.tab(tab_index, text=new_name)
 #! -------------------------------------------------------------------------------------------------------------------------   
     class Checkbutton(tk.Checkbutton):
         def __init__(self, parent, enable_hover=True, bg=None, fg=None, selectcolor=None, **kwargs):
@@ -776,18 +830,25 @@ class GTG:
             super().__init__(parent, **kwargs)
             self.enable_hover = enable_hover
 
-            self.configure(
-                bg="white",
-                fg="black",
-                font=("Arial", 12),
-                wrap="word",
-                borderwidth=5,
-                relief="sunken",
-                insertbackground="black",
-                highlightthickness=2,
-                highlightbackground="#a0a0a0",
-                highlightcolor="#808080"
-            )
+            # Default configuration
+            default_config = {
+                "bg": "white",
+                "fg": "black",
+                "font": ("Arial", 12),
+                "wrap": "word",
+                "borderwidth": 5,
+                "relief": "sunken",
+                "insertbackground": "black",
+                "highlightthickness": 2,
+                "highlightbackground": "#a0a0a0",
+                "highlightcolor": "#808080"
+            }
+
+            # Update default configuration with any user-provided kwargs
+            default_config.update(kwargs)
+
+            # Apply the configuration
+            self.configure(**default_config)
 
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover)
@@ -799,7 +860,7 @@ class GTG:
 
         def on_leave(self, event):
             if self.enable_hover:
-                self.configure(highlightbackground="#a0a0a0", highlightcolor="#808080") 
+                self.configure(highlightbackground="#a0a0a0", highlightcolor="#808080")
 
 #! -------------------------------------------------------------------------------------------------------------------------
     class Progressbar(ttk.Progressbar):
