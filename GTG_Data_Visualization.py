@@ -23,11 +23,11 @@ class FloatingDot:
         self.radius = radius
         self.color = color
         self.widget_class = widget_class
-        self.name = widget_class.__name__  # Name of the widget to be displayed in a dot
-        self.vx = GTG_Random.uniform(-2, 2)  # Horizontal velocity
-        self.vy = GTG_Random.uniform(-2, 2)  # Vertical velocity
+        self.name = widget_class.__name__  # \\ Name of the widget to be displayed in a dot
+        self.vx = GTG_Random.uniform(-2, 2)  # \\ Horizontal velocity
+        self.vy = GTG_Random.uniform(-2, 2)  # \\ Vertical velocity
 
-        # Create the dot
+        # \\ Create the dot \\ 
         self.id = canvas.create_oval(
             x - radius, y - radius, x + radius, y + radius, fill=color, outline="black"
         )
@@ -37,12 +37,12 @@ class FloatingDot:
             text=self.name,
             font=("Arial", 10, "bold"),
             fg="Black",
-            bg=color,  # Match the dot's color
+            bg=color,  # \\ Match the dot's color
             padx=5,
             pady=2,
         )
 
-        # Place the label on the canvas using create_window
+        # \\ Place the label on the canvas using create_window \\ 
         self.label_id = canvas.create_window(x, y, window=self.label)
         self.canvas.tag_bind(self.id, "<Button-1>", self.on_click)
         self.label.bind("<Button-1>", self.on_click)
@@ -55,18 +55,17 @@ class FloatingDot:
         """Create a pop-up window to display the widget's source code and an example."""
         popup = GTG.Toplevel(
             parent=self.canvas,
-            enable_hover=False,  # Enable hover effects
-            default_bg="#2b2b2b",  # Match the background color of your app
-            hover_bg="#3b3b3b",  # Hover background color
-            hover_highlight="#808080",  # Hover highlight color
-            relief="ridge",  # Border style
-            borderwidth=10,  # Border width
-            highlightthickness=2  # Highlight thickness
+            enable_hover=False,  
+            default_bg="#2b2b2b",  
+            hover_bg="#3b3b3b", 
+            hover_highlight="#808080", 
+            relief="ridge", 
+            borderwidth=10,  
+            highlightthickness=2  
         )
         popup.title(f"Source Code and Example: {self.widget_class.__name__}")
         popup.geometry("1200x600")
 
-        # Frame for the source code
         code_frame = GTG.Frame(popup, bg="#2b2b2b")
         code_frame.pack(side="left", fill="both", expand=True, padx=10, pady=10)
 
@@ -90,11 +89,9 @@ class FloatingDot:
         )
         code_text.pack(fill="both", expand=True, padx=10, pady=10)
 
-        # Retrieve and display the source code with syntax highlighting
         source_code = inspect.getsource(self.widget_class)
         self.highlight_syntax(code_text, source_code)
 
-        # Generate and display example code for the widget
         example_code_frame = GTG.Frame(popup, bg="#2b2b2b")
         example_code_frame.pack(side="right", fill="both", expand=True, padx=10, pady=10)
 
@@ -118,7 +115,6 @@ class FloatingDot:
         )
         example_code_text.pack(fill="both", expand=True, padx=10, pady=10)
 
-        # Generate and display the example code
         example_code = self.generate_example_code()
         example_code_text.insert("end", example_code)
 
@@ -141,7 +137,7 @@ class FloatingDot:
             else:
                 text_widget.insert("end", content)
 
-        # Configure tags for syntax highlighting
+        # \\ Configure tags for syntax highlighting \\
         text_widget.tag_configure("comment", foreground="#75715e")
         text_widget.tag_configure("keyword", foreground="#f92672")
         text_widget.tag_configure("string", foreground="#e6db74")
@@ -153,18 +149,18 @@ class FloatingDot:
         widget_class = self.widget_class
         example_code = ""
 
-        # Inspect the widget's constructor (i.e., its parameters)
+        # \\ Inspect the widget's constructor (i.e., its parameters)
         constructor_params = inspect.signature(widget_class).parameters
         args = list(constructor_params.keys())
 
-        # Start building the example based on constructor params
+        # \\ Start building the example based on constructor params
         example_code = f"# Example for {self.widget_class.__name__} widget\n"
         # example_code += f"# Instantiating {self.widget_class.__name__} with default values\n"
         
-        # Generate the widget instantiation code dynamically
+        # \\ Generate the widget instantiation code dynamically
         example_code += f"{self.widget_class.__name__.lower()} = {widget_class.__name__}("
 
-        # Iterate through constructor parameters to auto-generate the example
+        # \\ Iterate through constructor parameters to auto-generate the example
         for i, param in enumerate(args):
             if param == 'self':
                 continue
@@ -172,8 +168,7 @@ class FloatingDot:
             if default_value is inspect.Parameter.empty:
                 default_value = 'None'  # If no default value is specified, use None
             example_code += f"\n    {param}={default_value},"
-
-        # Remove last comma and add closing parentheses
+        # \\ Remove last comma and add closing parentheses
         example_code = example_code.rstrip(',') + "\n)"
         example_code += f"\n# {self.widget_class.__name__} example completed"
 
@@ -184,7 +179,6 @@ class FloatingDot:
         self.x += self.vx
         self.y += self.vy
 
-        # Bounce off the walls
         if self.x - self.radius < 0 or self.x + self.radius > self.canvas.winfo_width():
             self.vx *= -1
         if self.y - self.radius < 0 or self.y + self.radius > self.canvas.winfo_height():
@@ -230,13 +224,11 @@ class FloatingDotApp:
             width=25,
         )
         self.dot_positions_text.pack(pady=10, padx=5, fill="both", expand=True)
-
         self.canvas.bind("<Motion>", self.update_mouse_position)
-
         self.dots = []
-        self.lines = []  # To store line IDs
+        self.lines = []  
 
-        # Add dots for each widget in the GTG framework
+        # \\ Add dots for each widget in the GTG framework \\
         self.add_dot(100, 100, color="#ff0000", widget_class=GTG.Button) # \\ Red
         self.add_dot(200, 200, color="#0000ff", widget_class=GTG.Frame) # \\ Blue 
         self.add_dot(300, 300, color="#4eff41", widget_class=GTG.Label) # \\ Neon Green
@@ -252,8 +244,8 @@ class FloatingDotApp:
         self.add_dot(100, 430, color="#ffedb5", widget_class=GTG.Notebook)
         self.add_dot(100, 430, color="#00ffff", widget_class=GTG.StringVar)
 
-        # FPS control
-        self.fps = 120  # Default FPS
+        # \\ FPS control
+        self.fps = 120  # \\ Default FPS
         self.fps_scale = GTG.Scale(self.sidebar, from_=10, to=120, orient="horizontal", label="FPS", command=self.update_fps)
         self.fps_scale.set(self.fps)
         self.fps_scale.pack(pady=10)
@@ -299,7 +291,7 @@ class FloatingDotApp:
 
     def draw_lines(self):
         """Draw lines between the dots."""
-        self.canvas.delete("line")  # Clear previous lines
+        self.canvas.delete("line")  # \\ Clear previous lines
         for i in range(len(self.dots)):
             for j in range(i + 1, len(self.dots)):
                 x1, y1 = self.dots[i].x, self.dots[i].y
@@ -312,7 +304,7 @@ class FloatingDotApp:
 
     def update_dot_positions(self):
         """Update the dot positions in the sidebar."""
-        self.dot_positions_text.delete(1.0, tk.END)  # Clear previous content
+        self.dot_positions_text.delete(1.0, tk.END)  # \\ Clear previous content
         for dot in self.dots:
             self.dot_positions_text.insert(
                 tk.END,
