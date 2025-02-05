@@ -697,7 +697,7 @@ The widget supports the following optional parameters:
 ```python
 import tkinter as tk
 
-class MyScale(tk.Scale):
+class GTG.Scale(tk.Scale):
     def __init__(self, parent, enable_hover=True, enable_click_effect=True, show_value=True, **kwargs):
         super().__init__(parent, **kwargs)
 
