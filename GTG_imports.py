@@ -24,9 +24,9 @@ import colorsys
 
 import calendar
 
-import psutil
+# import psutil
 
-import GPUtil
+# import GPUtil
 
 
 #! ------------------------------------
