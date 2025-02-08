@@ -229,8 +229,9 @@ class GTG:
 #! -------------------------------------------------------------------------------------------------------------------------  
 
 
+
     class Canvas(tk.Canvas):
-        def __init__(self, parent, enable_hover=False, hover_bg="#c0c0c0", default_bg="#d9d9d9", **kwargs):
+        def __init__(self, parent, enable_hover=False, hover_bg="#c0c0c0", default_bg="#d9d9d9", width=400, height=400, **kwargs):
             super().__init__(parent, **kwargs)
             self.enable_hover = enable_hover
             self.hover_bg = hover_bg
@@ -239,8 +240,8 @@ class GTG:
                 bg=self.default_bg,  
                 bd=5,           
                 relief="ridge", 
-                width=400,      
-                height=400      
+                width=width,      
+                height=height      
             )
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover)
@@ -1486,4 +1487,3 @@ class GTG:
             return self.message
 
 #!------------------------------------------------------------------------------------------------------------------------------
-
