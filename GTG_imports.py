@@ -24,9 +24,9 @@ import colorsys
 
 import calendar
 
-import psutil
-
-import GPUtil
+# import psutil 
+# #! Havent added App that uses these import to main branch yet 
+# import GPUtil
 
 import threading
 
