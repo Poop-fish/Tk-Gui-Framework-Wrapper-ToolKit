@@ -504,7 +504,7 @@ class SnakeTicker(GTG.Canvas):
 
 #! -------------------------------------------------------------------------------------------------------------------------
 
-class MiniSnakeGame(tk.Canvas):
+class MiniSnakeGame(GTG.Canvas):
     def __init__(self, parent, bg="black", width=400, height=300, **kwargs):
         super().__init__(parent, bg=bg, width=width, height=height, **kwargs)
         self.width = width
@@ -587,7 +587,7 @@ class MiniSnakeGame(tk.Canvas):
             self, text="Restart", command=self.reset_game,
             bg="white", fg="black", font=("Arial", 14)
         )
-        self.create_window(self.width // 2, self.height // 2 + 20, window=self.restart_button, tags="restart_button")
+        self.create_window(self.width // 2, self.height // 2 + 40, window=self.restart_button, tags="restart_button")
 
     def reset_game(self):
         self.delete("all") 
