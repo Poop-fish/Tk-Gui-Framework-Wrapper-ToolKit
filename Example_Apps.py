@@ -454,5 +454,112 @@ if __name__ == "__main__":
 #     app = Calculator(root)
 #     root.mainloop()
 
+# ----------------------------------------------------------- 
 
+#! Custom IDE (not done)
+class IDE:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Python IDE")
+        self.root.geometry("800x600")
+        root.configure(bg="#a8a8a8")
+        
+        # \\ Frame for code input area and line numbers \\
+        self.code_frame = GTG.Frame(self.root)
+        self.code_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        # \\ Line numbers
+        self.line_numbers = GTG.Text(self.code_frame, width=4, height=15, bg="lightgray", fg="black", state="disabled")
+        self.line_numbers.grid(row=0, column=0, sticky="ns")
+
+        # \\ Code Input Area (Text widget)
+        self.code_input = GT.ScrolledText(self.code_frame, width=80, height=15, wrap=tk.NONE)
+        self.code_input.grid(row=0, column=1, sticky="nsew")
+        
+        self.code_input.bind("<KeyRelease>", self.on_text_change)
+        self.code_input.bind("<MouseWheel>", self.on_text_change)
+        self.code_input.bind("<Configure>", self.update_line_numbers)
+
+        self.execute_button = GTG.Button(self.root, text="Execute", command=self.execute_code)
+        self.execute_button.grid(row=1, column=0, pady=10)
+
+        # \\ Output Display Area (Text widget)
+        self.output_area = scrolledtext.ScrolledText(self.root, width=80, height=10, wrap=tk.WORD)
+        self.output_area.grid(row=2, column=0, padx=10, pady=10)
+        
+        self.output_redirect = OutputRedirector(self.output_area)
+        self.update_line_numbers()
+
+    def execute_code(self):
+        code = self.code_input.get("1.0", tk.END)
+        self.output_area.delete("1.0", tk.END)
+        sys.stdout = self.output_redirect
+        sys.stderr = self.output_redirect
+
+        try:
+            exec(code)
+        except Exception as e:
+            print(f"Error: {str(e)}")
+        
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+    def on_text_change(self, event=None):
+        self.update_line_numbers()
+        self.highlight_syntax()
+
+    def highlight_syntax(self, event=None):
+        code = self.code_input.get("1.0", tk.END)
+        self.code_input.mark_set("range_start", "1.0")
+        self.code_input.tag_remove("Token", "1.0", tk.END)
+        lexer = PythonLexer()
+        style = get_style_by_name("friendly")
+
+        for token, text in lex(code, lexer):
+            if token in Token.Text or not text.strip():
+                continue
+            start = self.code_input.index("range_start")
+            end = self.code_input.index(f"{start}+{len(text)}c")
+            self.code_input.tag_add(str(token), start, end)
+            self.code_input.mark_set("range_start", end)
+
+            # Get the color for the token from the style
+            token_style = style.style_for_token(token)
+            if token_style["color"]:
+                # Convert hexadecimal color to a Tkinter-compatible format
+                color = self.hex_to_tkinter_color(token_style["color"])
+                self.code_input.tag_config(str(token), foreground=color)
+
+    def hex_to_tkinter_color(self, hex_color):
+        """
+        Convert a hexadecimal color code (e.g., #f8f8f2) to a Tkinter-compatible color format.
+        """
+        if not hex_color:
+            return None
+        hex_color = hex_color.lstrip("#")
+        rgb = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+        return f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+
+    def update_line_numbers(self, event=None):
+        lines = self.code_input.get("1.0", tk.END).count("\n")
+        self.line_numbers.config(state="normal")
+        self.line_numbers.delete("1.0", tk.END)
+        for i in range(1, lines + 1):
+            self.line_numbers.insert(tk.END, f"{i}\n")
+        self.line_numbers.config(state="disabled")
+
+class OutputRedirector:
+    def __init__(self, output_area):
+        self.output_area = output_area
+
+    def write(self, message):
+        self.output_area.insert(tk.END, message)
+        self.output_area.yview(tk.END)
+
+    def flush(self):
+        pass  # \\ No action required for flush, just keeping compatibility
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = IDE(root)
+    root.mainloop() 
 
