@@ -8,10 +8,13 @@ Making projects like this helps me improve my coding skills :)
 ### Prerequisites
 Make sure you have the following installed:
 - Python 3.x
-- Tkinter (usually comes pre-installed with Python)
-- Pillow (PIL)
-- Pygments
-
+- Tkinter (usually comes pre-installed with Python))
+- pip install pygments
+- pip install pillow
+- pip install psutil
+- pip install gputil
+- pip install cryptography
+  
 ### Installing Dependencies
 You can install the required Python packages using pip:
 
