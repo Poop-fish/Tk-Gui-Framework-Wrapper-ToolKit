@@ -11,8 +11,8 @@ Make sure you have the following installed:
 - Tkinter (usually comes pre-installed with Python))
 - pip install pygments
 - pip install pillow
-- pip install psutil
-- pip install gputil
+- pip install psutil (Not Needed atm)
+- pip install gputil (Not Need Atm)
 - pip install cryptography
   
 if you still having issues just copy all the import and ask ChatGPT or google them
