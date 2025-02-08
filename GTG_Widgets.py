@@ -6,39 +6,62 @@ from GTG_DateTime_Module import *
 class GTG:
 #! ----------------------------------- Start of Main Widgets (tk ,ttk) ----------------------------------------------------------------      
     
-    class Button(tk.Button): 
-        def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, frame=None, **kwargs):
+    class Button(tk.Button):
+        def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, frame=None, image_path=None, font=None, **kwargs):
             super().__init__(parent, **kwargs)
             
+            # \\ Default values \\
             self.default_bg = "#7f7f7f"
             self.default_fg = "Black"
             self.default_hover_bg = "light gray"
             self.default_hover_fg = "white"
             self.default_frame = "ridge"  
+            self.default_font = ("Arial", 12, "bold")  # \\ Default font
             
+            # \\  Customizable values \\ 
             self.bg = bg if bg is not None else self.default_bg
             self.fg = fg if fg is not None else self.default_fg
             self.hover_bg = hover_bg if hover_bg is not None else self.default_hover_bg
             self.hover_fg = hover_fg if hover_fg is not None else self.default_hover_fg
             self.frame = frame if frame is not None else self.default_frame
+            self.font = font if font is not None else self.default_font
+        
+            # \\ Image handling \\ 
+            self.image = None
+            self.image_path = image_path
+            if self.image_path:
+                self.load_image()  
             
             self.enable_hover = enable_hover
-        
+            
+            # \\ Configure the button style \\ 
             self.configure(
                 bg=self.bg,  
                 fg=self.fg,   
-                relief=self.frame, 
-                font=("Arial", 12, "bold"), 
+                relief=self.frame,
+                font=self.font,  
                 activebackground="darkgray",  
                 activeforeground="white",  
                 borderwidth=10,
                 highlightthickness=0, 
-                pady=5, padx=10 
+                pady=5, padx=10,
+                **kwargs 
             )
             
+            # \\ Bind hover events if enabled \\ 
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover) 
                 self.bind("<Leave>", self.on_leave)
+
+        def load_image(self):
+            """Load and resize the image to fit the button size."""
+            try:
+                pil_image = Image.open(self.image_path)
+                pil_image = pil_image.resize((self["width"], self["height"]))
+                self.image = ImageTk.PhotoImage(pil_image)
+                self.config(image=self.image)
+            except Exception as e:
+                print(f"Error loading image: {e}")
 
         def on_hover(self, event):
             """Change button appearance on hover."""
@@ -60,7 +83,7 @@ class GTG:
                     font=None, borderwidth=None, frame=None, padx=None, pady=None, **kwargs):
             super().__init__(parent, **kwargs)
             
-            # Default values
+            #* \\ Default values
             self.default_bg = "#7f7f7f"
             self.default_fg = "Black"
             self.default_hover_bg = "#e0e0e0"
@@ -71,7 +94,7 @@ class GTG:
             self.default_padx = 10
             self.default_pady = 5
             
-            # Customizable properties
+            #* \\ Customizable properties
             self.bg = bg if bg is not None else self.default_bg
             self.fg = fg if fg is not None else self.default_fg
             self.hover_bg = hover_bg if hover_bg is not None else self.default_hover_bg
@@ -145,7 +168,7 @@ class GTG:
         
             self.configure_frame()
             
-            # \\ Bind hover events if enabled
+            #* \\ Bind hover events if enabled
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover)
                 self.bind("<Leave>", self.on_leave)
@@ -516,7 +539,7 @@ class GTG:
             self.destroy()
             return button_text
 
-    # Helper methods for common message box types
+    # \\ Helper methods for common message box types
     @staticmethod
     def showinfo(parent, title, message):
         """Display an info message box."""
@@ -633,8 +656,9 @@ class GTG:
     
 #! -------------------------------------------------------------------------------------------------------------------------   
     class Radiobutton(tk.Radiobutton):
-        def __init__(self, parent, text, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, **kwargs):
-            super().__init__(parent, text=text, **kwargs)
+        def __init__(self, parent, text, variable, value, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, **kwargs):
+            super().__init__(parent, text=text, variable=variable, value=value, **kwargs)
+            
             self.default_bg = "#7f7f7f"
             self.default_fg = "black"
             self.default_hover_bg = "light gray"
@@ -679,32 +703,32 @@ class GTG:
             self.foreground = foreground
             self.font = font
 
-            # Configure the style for the notebook
+            # \\ Configure the style for the notebook
             self.style = ttk.Style()
             self.style.theme_use("alt")
-            # Configure the default tab style
+            # \\ Configure the default tab style
             self.style.configure("Custom.TNotebook", background=self.default_background)
             self.style.configure("Custom.TNotebook.Tab", 
                                 background=self.default_background, 
                                 foreground=self.foreground, 
                                 font=self.font,
-                                padding=[10, 5])  # Add padding to tabs
+                                padding=[10, 5])  # \\ Add padding to tabs
 
-            # Configure the hover effect for tabs
+            # \\ Configure the hover effect for tabs
             if self.enable_hover:
                 self.style.map("Custom.TNotebook.Tab",
                             background=[("active", self.hover_background),
                                         ("!active", self.default_background)])
 
-            # Apply the custom style to the notebook
+            # \\ Apply the custom style to the notebook
             self.configure(style="Custom.TNotebook")
 
-            # Bind events for dragging tabs
+            # \\ Bind events for dragging tabs
             self.bind("<ButtonPress-1>", self.on_tab_press)
             self.bind("<ButtonRelease-1>", self.on_tab_release)
             self.bind("<B1-Motion>", self.on_tab_drag)
 
-            # Bind double-click event for renaming tabs
+            # \\ Bind double-click event for renaming tabs
             self.bind("<Double-1>", self.on_tab_double_click)
 
             self.dragged_tab = None
@@ -722,10 +746,8 @@ class GTG:
         def on_tab_drag(self, event):
             """Called when a tab is being dragged."""
             if self.dragged_tab is not None:
-                # Find the tab under the mouse cursor
                 target_tab_index = self.index(f"@{event.x},{event.y}")
                 if target_tab_index != -1 and target_tab_index != self.dragged_tab:
-                    # Move the dragged tab to the new position
                     self.insert(target_tab_index, self.tabs()[self.dragged_tab])
                     self.dragged_tab = target_tab_index
 
@@ -864,22 +886,34 @@ class GTG:
 
 #! -------------------------------------------------------------------------------------------------------------------------
     class Progressbar(ttk.Progressbar):
-        def __init__(self, parent, length=200, mode="determinate", **kwargs):
+        def __init__(self, parent, length=200, mode="determinate", style_name="Custom.Horizontal.TProgressbar", **kwargs):
             super().__init__(parent, length=length, mode=mode, **kwargs)
-            self.configure(
-                style="Custom.Horizontal.TProgressbar"
-            )
-
-            style = ttk.Style()
-            style.theme_use("clam")
-            style.configure(
-                "Custom.Horizontal.TProgressbar",
+            
+            # \\ Default style configuration
+            self.style_name = style_name
+            self.style = ttk.Style()
+            self.style.theme_use("clam")
+            
+            # \\ Apply default or custom style
+            self.configure(style=self.style_name)
+            self.set_style(
                 troughcolor="#d9d9d9",
                 background="#7f7f7f",
                 bordercolor="#a0a0a0",
                 lightcolor="#c0c0c0",
                 darkcolor="#808080"
-            ) 
+            )
+
+        def set_style(self, **kwargs):
+            """
+            Customize the progress bar style.
+            Available options: troughcolor, background, bordercolor, lightcolor, darkcolor, etc.
+            """
+            self.style.configure(
+                self.style_name,
+                **kwargs
+            )
+
 #! -------------------------------------------------------------------------------------------------------------------------
     class OptionMenu(tk.OptionMenu):
         def __init__(self, parent, variable, *options, enable_hover=True, bg="#7f7f7f", fg="black", hover_bg="light gray", hover_fg="white", font=("Arial", 12), **kwargs):
@@ -965,7 +999,7 @@ class GTG:
             self.sash_color = sash_color if sash_color else self.default_sash_color
             self.hover_sash_color = hover_sash_color if hover_sash_color else self.default_hover_sash_color
 
-            # \\  Configure the style for the PanedWindow
+            # \\ Configure the style for the PanedWindow
             self.style = ttk.Style()
             self.style.configure("Custom.TPanedwindow", background="#d9d9d9")
             self.style.configure("Custom.TPanedwindow.Sash", background=self.sash_color)
@@ -1043,7 +1077,8 @@ class GTG:
             """Set the relief style of the sash."""
             self.style.configure("Custom.TPanedwindow.Sash", relief=relief)
 
-
+#! -------------------------------------------------------------------------------------------------------------------------
+    
     class SplitView(ttk.PanedWindow):
         def __init__(self, parent, orientation="horizontal", **kwargs):
             super().__init__(parent, orient=orientation, **kwargs)
@@ -1057,6 +1092,133 @@ class GTG:
                 widget.pack(in_=self.pane1, fill="both", expand=True)
             else:
                 widget.pack(in_=self.pane2, fill="both", expand=True)
+#! -------------------------------------------------------------------------------------------------------------------------   
+    
+    class Combobox(ttk.Combobox):
+        def __init__(self, parent, values, default_index=0, bg="#7f7f7f", fg="black", hover_bg="light gray", hover_fg="white", **kwargs):
+            super().__init__(parent, values=values, state="readonly", **kwargs)
+            
+            self.default_bg = bg
+            self.default_fg = fg
+            self.hover_bg = hover_bg
+            self.hover_fg = hover_fg
+            
+            self.current(default_index)
+            self.bind("<Enter>", self.on_hover)
+            self.bind("<Leave>", self.on_leave)
+            
+        def on_hover(self, event):
+            self.configure(background=self.hover_bg, foreground=self.hover_fg)
+        
+        def on_leave(self, event):
+            self.configure(background=self.default_bg, foreground=self.default_fg)
+
+#! -------------------------------------------------------------------------------------------------------------------------
+
+    class Treeview(ttk.Treeview):
+        def __init__(self, parent, columns, show_headers=True, **kwargs):
+            super().__init__(parent, columns=columns, show="tree headings" if show_headers else "tree", **kwargs)
+            self.columns = columns
+            self.headings = [col.capitalize() for col in columns]
+            self.configure_columns()
+            self.apply_styles()
+        
+            self.bind("<Motion>", self.on_hover) 
+            self.bind("<Leave>", self.on_leave)
+            self.bind("<Double-1>", self.toggle_item)  # \\ Double-click to expand/collapse
+            self.last_hovered = None
+            self.tag_configure("hover", background="gray")  
+
+        def configure_columns(self):
+            """Configure columns with default width and alignment."""
+            for col, heading in zip(self.columns, self.headings):
+                self.heading(col, text=heading)
+                self.column(col, width=120, anchor="center")
+
+        def apply_styles(self):
+            """Apply a modern theme with relief effects."""
+            style = ttk.Style()
+            style.theme_use("alt")  
+            style.configure("Treeview",
+                            background="black",
+                            foreground="lime",
+                            rowheight=25,
+                            fieldbackground="#f8f8f8",
+                            relief="groove")  
+            style.map("Treeview",
+                    background=[("selected", "lightgray")],  
+                    foreground=[("selected", "lime")])
+            style.configure("Treeview.Heading", font=("Arial", 10, "bold"), relief="raised", background="#dddddd" , borderwidth=5)
+
+        def add_item(self, parent="", text="", values=(), open_state=False):
+            """Add a new item with optional parent-child hierarchy."""
+            return self.insert(parent, "end", text=text, values=values, open=open_state)
+
+        def on_hover(self, event):
+            """Highlight row on mouse hover."""
+            row = self.identify_row(event.y)
+            if row != self.last_hovered:
+                if self.last_hovered:
+                    self.item(self.last_hovered, tags=())
+                if row:
+                    self.item(row, tags=("hover",))
+                    self.last_hovered = row
+
+        def on_leave(self, event):
+            """Remove hover highlight when cursor leaves the widget."""
+            if self.last_hovered:
+                self.item(self.last_hovered, tags=())
+                self.last_hovered = None
+
+        def toggle_item(self, event):
+            """Expand or collapse a row on double-click."""
+            item = self.identify_row(event.y)
+            if item:
+                is_open = self.item(item, "open")
+                self.item(item, open=not is_open)
+#! ---------------------------------------------------------------------------------------------------------------------------------
+    
+    class LabelFrame(tk.LabelFrame):
+        def __init__(self, parent, text="", enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, **kwargs):
+            super().__init__(parent, text=text, **kwargs)
+            
+            # \\ Default values \\ 
+            self.default_bg = "#7f7f7f"
+            self.default_fg = "black"
+            self.default_hover_bg = "light gray"
+            self.default_hover_fg = "white"
+
+            self.bg = bg if bg is not None else self.default_bg
+            self.fg = fg if fg is not None else self.default_fg
+            self.hover_bg = hover_bg if hover_bg is not None else self.default_hover_bg
+            self.hover_fg = hover_fg if hover_fg is not None else self.default_hover_fg
+
+            self.enable_hover = enable_hover
+
+            self.configure(
+                bg=self.bg,
+                fg=self.fg,
+                relief="ridge",
+                borderwidth=5
+            )
+
+            if self.enable_hover:
+                self.bind("<Enter>", self.on_hover)
+                self.bind("<Leave>", self.on_leave)
+
+        def on_hover(self, event):
+            if self.enable_hover:
+                self.configure(bg=self.hover_bg, fg=self.hover_fg)
+
+        def on_leave(self, event):
+            if self.enable_hover:
+                self.configure(bg=self.bg, fg=self.fg)
+    
+  
+
+    class Bitmap(tk.Label):
+        def __init__(self, parent, bitmap, **kwargs):
+            super().__init__(parent, bitmap=bitmap, **kwargs)
 
 #! ------------------------------------------  END of Main Widgets ------------------------------------------------------------------------------------------------
 
@@ -1324,5 +1486,5 @@ class GTG:
         def __str__(self):
             return self.message
 
-
 #!------------------------------------------------------------------------------------------------------------------------------
+
