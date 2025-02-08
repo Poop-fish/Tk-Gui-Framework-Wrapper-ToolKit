@@ -1,6 +1,5 @@
 from GTG_imports import tk , ttk 
 from GTG_imports import *
-# from datetime import datetime
 from GTG_DateTime_Module import *
 
 class GTG:
