@@ -1,36 +1,40 @@
 from GTG_imports import tk , ttk 
 from GTG_imports import *
-from GTG_DateTime_Module import *
+from PyGTG.Modules.GTG_DateTime_Module import *
 
-class GTG:
 #! ----------------------------------- Start of Main Widgets (tk ,ttk) ----------------------------------------------------------------      
-    
+   
+class GTG:
+  
     class Button(tk.Button):
-        def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, frame=None, image_path=None, font=None, **kwargs):
+        def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, frame=None, image_path=None, font=None, borderwidth=10, link=None, **kwargs):
             super().__init__(parent, **kwargs)
             
-            # \\ Default values \\
+            # \\ Default values \\ 
             self.default_bg = "#7f7f7f"
             self.default_fg = "Black"
             self.default_hover_bg = "light gray"
             self.default_hover_fg = "white"
             self.default_frame = "ridge"  
             self.default_font = ("Arial", 12, "bold")  # \\ Default font
+            self.default_borderwidth = 10  # \\ Default borderwidth
             
-            # \\  Customizable values \\ 
+            # \\ Customizable values \\ 
             self.bg = bg if bg is not None else self.default_bg
             self.fg = fg if fg is not None else self.default_fg
             self.hover_bg = hover_bg if hover_bg is not None else self.default_hover_bg
             self.hover_fg = hover_fg if hover_fg is not None else self.default_hover_fg
             self.frame = frame if frame is not None else self.default_frame
             self.font = font if font is not None else self.default_font
-        
+            self.borderwidth = borderwidth  # \\ Custom borderwidth
+            
             # \\ Image handling \\ 
             self.image = None
             self.image_path = image_path
             if self.image_path:
                 self.load_image()  
             
+            self.link = link  # \\ Store the link 
             self.enable_hover = enable_hover
             
             # \\ Configure the button style \\ 
@@ -41,7 +45,7 @@ class GTG:
                 font=self.font,  
                 activebackground="darkgray",  
                 activeforeground="white",  
-                borderwidth=10,
+                borderwidth=self.borderwidth,
                 highlightthickness=0, 
                 pady=5, padx=10,
                 **kwargs 
@@ -51,6 +55,10 @@ class GTG:
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover) 
                 self.bind("<Leave>", self.on_leave)
+            
+            # \\ Bind Click event to open link \\ 
+            if self.link:
+                self.bind("<Button>" , self.on_click)
 
         def load_image(self):
             """Load and resize the image to fit the button size."""
@@ -65,24 +73,30 @@ class GTG:
         def on_hover(self, event):
             """Change button appearance on hover."""
             if self.enable_hover:
-                self.configure(bg=self.hover_bg, fg=self.hover_fg, relief="raised", borderwidth=10)  
+                self.configure(bg=self.hover_bg, fg=self.hover_fg, relief="raised", borderwidth=self.borderwidth)  
 
         def on_leave(self, event):
             """Revert button appearance when not hovering."""
             if self.enable_hover:
-                self.configure(bg=self.bg, fg=self.fg, relief=self.frame, borderwidth=10)  
+                self.configure(bg=self.bg, fg=self.fg, relief=self.frame, borderwidth=self.borderwidth)  
+        
+        def on_click(self, event):
+            """Open the link in the default web browser when the button is clicked."""
+            if self.link:
+                webbrowser.open(self.link)
         
         def toggle_text(self, new_text):
-            """Change the button's text."""
+            """Change the button's text.""" 
             self.config(text=new_text)
 
 #! -------------------------------------------------------------------------------------------------------------------------
+    
     class Label(tk.Label):
         def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, 
                     font=None, borderwidth=None, frame=None, padx=None, pady=None, **kwargs):
             super().__init__(parent, **kwargs)
             
-            #* \\ Default values
+            #* \\ Default values \\
             self.default_bg = "#7f7f7f"
             self.default_fg = "Black"
             self.default_hover_bg = "#e0e0e0"
@@ -93,7 +107,7 @@ class GTG:
             self.default_padx = 10
             self.default_pady = 5
             
-            #* \\ Customizable properties
+            #* \\ Customizable properties \\
             self.bg = bg if bg is not None else self.default_bg
             self.fg = fg if fg is not None else self.default_fg
             self.hover_bg = hover_bg if hover_bg is not None else self.default_hover_bg
@@ -104,10 +118,9 @@ class GTG:
             self.padx = padx if padx is not None else self.default_padx
             self.pady = pady if pady is not None else self.default_pady
             
-            #* \\ Enable/disable hover effect
             self.enable_hover = enable_hover
             
-            #* \\ Configure the label
+            #* \\ Configure the label \\
             self.configure(
                 bg=self.bg,
                 fg=self.fg,
@@ -118,7 +131,7 @@ class GTG:
                 pady=self.pady
             )
             
-            #* \\ Bind hover events if enabled
+            #* \\ Bind hover events if enabled \\
             if self.enable_hover:
                 self.bind("<Enter>", self.on_hover)
                 self.bind("<Leave>", self.on_leave)
@@ -133,6 +146,7 @@ class GTG:
 
     
 #! -------------------------------------------------------------------------------------------------------------------------   
+    
     class Frame(tk.Frame):
         def __init__(self, parent, enable_hover=False, bg=None, highlightbackground=None, hover_bg=None, 
                     hover_highlight=None, relief="ridge", borderwidth=None, hover_borderwidth=None, 
@@ -140,7 +154,7 @@ class GTG:
                     animation_speed=10, **kwargs):
             super().__init__(parent, **kwargs)
             
-            #* \\ Default values
+            #* \\ Default values \\ 
             self.default_bg = "#d9d9d9"
             self.default_highlight = "#a0a0a0"
             self.default_hover_bg = "#c0c0c0"
@@ -150,7 +164,7 @@ class GTG:
             self.default_pady = 0
             self.default_cursor = "arrow"
             
-            #* \\ Customizable properties
+            #* \\ Customizable properties \\
             self.bg_color = bg if bg is not None else self.default_bg
             self.highlight_color = highlightbackground if highlightbackground is not None else self.default_highlight
             self.hover_bg = hover_bg if hover_bg is not None else self.default_hover_bg
@@ -228,8 +242,6 @@ class GTG:
             )
 #! -------------------------------------------------------------------------------------------------------------------------  
 
-
-
     class Canvas(tk.Canvas):
         def __init__(self, parent, enable_hover=False, hover_bg="#c0c0c0", default_bg="#d9d9d9", width=400, height=400, **kwargs):
             super().__init__(parent, **kwargs)
@@ -257,7 +269,7 @@ class GTG:
 
         def draw_rectangle(self, x1, y1, x2, y2, **kwargs):
             """Draws a rectangle on the canvas.
-            
+
             Args:
                 x1, y1, x2, y2 (int): Coordinates of the rectangle.
                 **kwargs: Additional arguments for the rectangle (e.g., fill, outline).
@@ -398,13 +410,13 @@ class GTG:
                     hover_bg="#e0e0e0", hover_highlight="#808080", relief="ridge", borderwidth=10,
                     highlightthickness=2, **kwargs):
             super().__init__(parent, **kwargs)
-
+ 
             # \\ Customizable attributes
             self.default_bg = default_bg
             self.default_highlight = default_highlight
             self.hover_bg = hover_bg
             self.hover_highlight = hover_highlight
-
+            self.iconbitmap('Assets/FaceLogo.ico')
             # \\ Configure the window's appearance
             self.configure(
                 bg=self.default_bg,
@@ -429,6 +441,7 @@ class GTG:
             if self.enable_hover:
                 self.configure(bg=self.default_bg, highlightbackground=self.default_highlight)
 #! -------------------------------------------------------------------------------------------------------------------------
+    
     class Scale(tk.Scale):
         def __init__(self, parent, enable_hover=True, enable_click_effect=True, show_value=True, **kwargs):
             super().__init__(parent, **kwargs)
@@ -509,7 +522,8 @@ class GTG:
             self.configure(showvalue=show_value)
 
 #! -------------------------------------------------------------------------------------------------------------------------
-    class MessageBox(tk.Toplevel):
+    
+    class MessageBox(Toplevel):
         def __init__(self, parent, title, message, message_type="info", buttons=["OK"], **kwargs):
             super().__init__(parent, **kwargs)
             self.parent = parent
@@ -573,6 +587,7 @@ class GTG:
 
 
 #! -------------------------------------------------------------------------------------------------------------------------
+    
     class Spinbox(tk.Spinbox):
         def __init__(self, parent, enable_hover=True, **kwargs):
             super().__init__(parent, **kwargs)
@@ -597,6 +612,7 @@ class GTG:
                 self.configure(bg="white")
 
 #! -------------------------------------------------------------------------------------------------------------------------
+    
     class Menu(tk.Menu):
         def __init__(self, parent, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, **kwargs):
             super().__init__(parent, **kwargs)
@@ -653,8 +669,10 @@ class GTG:
         def add_radiobutton(self, label, command=None, **kwargs):
             """Add a radiobutton to the menu."""
             super().add_radiobutton(label=label, command=command, **kwargs) 
-    
+
+
 #! -------------------------------------------------------------------------------------------------------------------------   
+    
     class Radiobutton(tk.Radiobutton):
         def __init__(self, parent, text, variable, value, enable_hover=True, bg=None, fg=None, hover_bg=None, hover_fg=None, **kwargs):
             super().__init__(parent, text=text, variable=variable, value=value, **kwargs)
@@ -693,6 +711,7 @@ class GTG:
                 self.configure(bg=self.bg, fg=self.fg)
     
 #! -------------------------------------------------------------------------------------------------------------------------   
+    
     class Notebook(ttk.Notebook):
         def __init__(self, parent, enable_hover=True, hover_background="light gray", 
                     default_background="#7f7f7f", foreground="black", font=("Arial", 12), **kwargs):
@@ -763,7 +782,9 @@ class GTG:
             new_name = simpledialog.askstring("Rename Tab", "Enter new tab name:", initialvalue=current_name)
             if new_name:
                 self.tab(tab_index, text=new_name)
+
 #! -------------------------------------------------------------------------------------------------------------------------   
+    
     class Checkbutton(tk.Checkbutton):
         def __init__(self, parent, enable_hover=True, bg=None, fg=None, selectcolor=None, **kwargs):
             super().__init__(parent, **kwargs)
@@ -818,10 +839,9 @@ class GTG:
 
             self.default_bg = "#ffffff"
             self.default_fg = "black"
-
+            
             self.bg = bg if bg is not None else self.default_bg
             self.fg = fg if fg is not None else self.default_fg
-
             self.enable_hover = enable_hover
 
             self.configure(
@@ -852,7 +872,7 @@ class GTG:
             super().__init__(parent, **kwargs)
             self.enable_hover = enable_hover
 
-            # Default configuration
+            # \\ Default configuration
             default_config = {
                 "bg": "white",
                 "fg": "black",
@@ -866,10 +886,7 @@ class GTG:
                 "highlightcolor": "#808080"
             }
 
-            # Update default configuration with any user-provided kwargs
             default_config.update(kwargs)
-
-            # Apply the configuration
             self.configure(**default_config)
 
             if self.enable_hover:
@@ -941,6 +958,7 @@ class GTG:
             self.hover_bg = hover_bg
             self.hover_fg = hover_fg
             self.font = font
+            
             self.configure(
                 bg=self.bg,
                 fg=self.fg,
