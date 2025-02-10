@@ -317,7 +317,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from cryptography.fernet import Fernet
 
-class GFileEncrypter:
+class FileEncrypter:
     def __init__(self, root=None, x=0, y=0, width=400, height=300):
         self.root = root
         self.x = x
