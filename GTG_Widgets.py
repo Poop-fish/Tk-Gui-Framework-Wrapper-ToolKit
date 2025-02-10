@@ -1,6 +1,6 @@
 from GTG_imports import tk , ttk 
 from GTG_imports import *
-from PyGTG.Modules.GTG_DateTime_Module import *
+from GTG_DateTime_Module import *
 
 #! ----------------------------------- Start of Main Widgets (tk ,ttk) ----------------------------------------------------------------      
    
