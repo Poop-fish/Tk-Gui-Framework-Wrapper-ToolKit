@@ -1,10 +1,12 @@
 from GTG_imports import * 
-from GTG_Widgets import GTG , GTGDateTime
+from PyGTG.Widgets.GTG_Widgets import GTG , GTGDateTime
+import math
 
-#! ------------------------------------ Custom Widgets Made With GTG Gui ----------------------------------------------------------------------------------
-    
+#! -------------------------------------------- Extended Widgets -----------------------------------------------------------------------------
+
 class GT:    
-    class FileDialog(GTG.Toplevel):
+
+    class FileDialog(GTG.Toplevel): # TODO : Remake this and clean up it up 
         def __init__(self, parent, initialdir=None, title="Select File"):
             super().__init__(parent)
             self.title(title)
@@ -73,23 +75,11 @@ class GT:
         def get_file_path(self):
             return self.file_path
 
-    #! -------------------------------------------- Extended Widgets -----------------------------------------------------------------------------
+    #! -------------------------------------------------------------------------------------------------------------------------
 
     class Tooltip:
         def __init__(self, widget, text, delay=500, bg="#ffffe0", fg="black", font=("Arial", 10), borderwidth=1, relief="solid"):
-            """
-            Initialize the Tooltip.
 
-            Parameters:
-                widget: The widget to which the tooltip is attached.
-                text (str): The text to display in the tooltip.
-                delay (int): Delay in milliseconds before the tooltip appears.
-                bg (str): Background color of the tooltip.
-                fg (str): Foreground (text) color of the tooltip.
-                font (tuple): Font style and size for the tooltip text.
-                borderwidth (int): Border width of the tooltip.
-                relief (str): Border style of the tooltip (e.g., "solid", "raised").
-            """
             self.widget = widget
             self.text = text
             self.delay = delay
@@ -126,7 +116,7 @@ class GT:
             y += self.widget.winfo_rooty() + 25
 
             self.tooltip = tk.Toplevel(self.widget)
-            self.tooltip.wm_overrideredirect(True)  # Remove window decorations
+            self.tooltip.wm_overrideredirect(True)  
             self.tooltip.wm_geometry(f"+{x}+{y}")
 
             label = GTG.Label(
@@ -216,7 +206,7 @@ class GT:
 
 #! -------------------------------------------------------------------------------------------------------------------------
 
-    class GTGScrolledText(GTG.Frame):
+    class ScrolledText(GTG.Frame):
         def __init__(self, parent, **kwargs):
             super().__init__(parent)
 
@@ -321,7 +311,6 @@ class GT:
         def get_value(self):
             return round(self.value) 
 
-
 #! -------------------------------------------------------------------------------------------------------------------------
 
     class ScrolledText(tk.Frame):
@@ -371,232 +360,382 @@ class GT:
 
 #! -------------------------------------------------------------------------------------------------------------------------
 
-class TextTicker(GTG.Canvas):
-    def __init__(self, parent, text="Breaking News: Stock prices are rising!", bg="black", fg="white", font=("Arial", 12), speed=5, **kwargs):
-        super().__init__(parent, bg=bg, bd=0, highlightthickness=0, **kwargs)
-        self.text = text
-        self.fg = fg
-        self.font = font
-        self.speed = speed
-        self.width = kwargs.get("width", 600) 
-        self.height = kwargs.get("height", 40)  
-        self.text_id = None
-        self._setup_ticker()
+    class TextTicker(GTG.Canvas):
+        def __init__(self, parent, text="Breaking News!!!!!!", bg="black", fg="white", font=("Arial", 12), speed=5, **kwargs):
+            super().__init__(parent, bg=bg, bd=0, highlightthickness=0, **kwargs)
+            self.text = text
+            self.fg = fg
+            self.font = font
+            self.speed = speed
+            self.width = kwargs.get("width", 600) 
+            self.height = kwargs.get("height", 40)  
+            self.text_id = None
+            self._setup_ticker()
 
-    def _setup_ticker(self):
-        self.text_id = self.create_text(self.width, self.height // 2, text=self.text, fill=self.fg, font=self.font, anchor="w")
-        self.move_text()
+        def _setup_ticker(self):
+            self.text_id = self.create_text(self.width, self.height // 2, text=self.text, fill=self.fg, font=self.font, anchor="w")
+            self.move_text()
 
-    def move_text(self):
-        current_x = self.coords(self.text_id)[0]
-        
-        if current_x < -self.bbox(self.text_id)[2]:
-            self.coords(self.text_id, self.width, self.height // 2)
-
-        self.move(self.text_id, -self.speed, 0)
-        self.after(50, self.move_text) 
-        
-        #! Example label with the TextTicker
-        # # self.ticker = TextTicker(
-        # #     self.gen_frame, 
-        # #     text="Welcome", 
-        # #     bg="black", 
-        # #     fg="white", 
-        # #     font=("Arial", 14), 
-        # #     speed=10, 
-        # #     width=600, 
-        # #     height=40
-        # # )
-        # # self.ticker.pack(pady=10, fill="x")
-
-#! -------------------------------------------------------------------------------------------------------------------------
-
-class SnakeTicker(GTG.Canvas):
-    def __init__(self, parent, bg="black", speed=5, **kwargs):
-        super().__init__(parent, bg=bg, bd=0, highlightthickness=0, **kwargs)
-        self.speed = speed
-        self.width = kwargs.get("width", 600) 
-        self.height = kwargs.get("height", 100)  
-        self.snake = []  
-        self.snake_length = 3
-        self.food_dots = []  
-        self.num_food_dots = 5  
-        self.snake_y = self.height // 2 
-        self._setup_snake()
-        self._setup_food_dots()
-        self.move_snake()
-
-    def _setup_snake(self):
-    
-        for i in range(self.snake_length):
-            x = 50 - i * 10  
-            y = self.snake_y
-            segment = self.create_rectangle(x, y, x + 10, y + 10, fill="green")
-            self.snake.append(segment)
-
-    def _setup_food_dots(self):
-        for _ in range(self.num_food_dots):
-            self.add_food_dot()
-
-    def add_food_dot(self):
-        x = random.randint(0, self.width - 10)
-        y = self.snake_y 
-        food = self.create_oval(x, y, x + 10, y + 10, fill="red")
-        self.food_dots.append(food)
-
-    def move_snake(self):
-        head = self.snake[0]
-        head_coords = self.coords(head)
-        new_head = self.create_rectangle(
-            head_coords[0] + self.speed, head_coords[1],
-            head_coords[2] + self.speed, head_coords[3],
-            fill="green"
-        )
-        self.snake.insert(0, new_head)  
-
-        for food in self.food_dots[:]: 
-            food_coords = self.coords(food)
-            if self.check_collision(head_coords, food_coords):
-                self.snake_length += 1  
-                self.food_dots.remove(food) 
-                self.delete(food)  
-                self.add_food_dot()  
-                break  
-
-        if len(self.snake) > self.snake_length:
-            tail = self.snake.pop()
-            self.delete(tail)
-
-        if head_coords[0] > self.width:
-            self.reset_snake()
-
-        self.after(50, self.move_snake)
-
-    def check_collision(self, coords1, coords2):
-        return (
-            coords1[0] < coords2[2] and
-            coords1[2] > coords2[0] and
-            coords1[1] < coords2[3] and
-            coords1[3] > coords2[1]
-        )
-
-    def reset_snake(self):
-        for segment in self.snake:
-            self.delete(segment)
-        self.snake = []
-        self.snake_length = 3
-        self._setup_snake()
-
-        for food in self.food_dots:
-            self.delete(food)
-        self.food_dots = []
-        self._setup_food_dots() 
-
-       #! examplet  label with the snakeTicker
-        # self.ticker = SnakeTicker(
-        #     self.gen_frame, 
-        #     bg="black", 
-        #     speed=5, 
-        #     width=600, 
-        #     height=100
-        # )
-        # self.ticker.pack(pady=10, fill="x") 
-
-#! -------------------------------------------------------------------------------------------------------------------------
-
-class MiniSnakeGame(GTG.Canvas):
-    def __init__(self, parent, bg="black", width=400, height=300, **kwargs):
-        super().__init__(parent, bg=bg, width=width, height=height, **kwargs)
-        self.width = width
-        self.height = height
-        self.snake = [(100, 100), (90, 100), (80, 100)]  
-        self.direction = "Right" 
-        self.food = self.create_food()  
-        self.score = 0
-        self.game_over = False
-        self.bind_controls()
-        self.update_game()
-
-    def bind_controls(self):
-        self.bind_all("<Left>", lambda event: self.set_direction("Left"))
-        self.bind_all("<Right>", lambda event: self.set_direction("Right"))
-        self.bind_all("<Up>", lambda event: self.set_direction("Up"))
-        self.bind_all("<Down>", lambda event: self.set_direction("Down"))
-
-    def set_direction(self, direction):
-        if (direction == "Left" and self.direction != "Right" or
-            direction == "Right" and self.direction != "Left" or
-            direction == "Up" and self.direction != "Down" or
-            direction == "Down" and self.direction != "Up"):
-            self.direction = direction
-
-    def create_food(self):
-        x = random.randint(0, (self.width - 10) // 10) * 10
-        y = random.randint(0, (self.height - 10) // 10) * 10
-        return self.create_oval(x, y, x + 10, y + 10, fill="red")
-
-    def move_snake(self):
-        if self.game_over:
-            return
-        head_x, head_y = self.snake[0]
-        if self.direction == "Left":
-            new_head = (head_x - 10, head_y)
-        elif self.direction == "Right":
-            new_head = (head_x + 10, head_y)
-        elif self.direction == "Up":
-            new_head = (head_x, head_y - 10)
-        elif self.direction == "Down":
-            new_head = (head_x, head_y + 10)
-
-        if (new_head in self.snake or
-            new_head[0] < 0 or new_head[0] >= self.width or
-            new_head[1] < 0 or new_head[1] >= self.height):
-            self.game_over = True
-            self.display_game_over()
+        def move_text(self):
+            current_x = self.coords(self.text_id)[0]
             
-            return
+            if current_x < -self.bbox(self.text_id)[2]:
+                self.coords(self.text_id, self.width, self.height // 2)
 
-        self.snake.insert(0, new_head)
+            self.move(self.text_id, -self.speed, 0)
+            self.after(50, self.move_text) 
+            
+            #! Example label with the TextTicker
+            # # self.ticker = TextTicker(
+            # #     self.gen_frame, 
+            # #     text="Welcome", 
+            # #     bg="black", 
+            # #     fg="white", 
+            # #     font=("Arial", 14), 
+            # #     speed=10, 
+            # #     width=600, 
+            # #     height=40
+            # # )
+            # # self.ticker.pack(pady=10, fill="x")
 
-        if self.coords(self.food) == [new_head[0], new_head[1], new_head[0] + 10, new_head[1] + 10]:
-            self.score += 1
-            self.delete(self.food)
-            self.food = self.create_food()
-        else:
-            tail = self.snake.pop()
-            self.delete(self.find_withtag("snake_segment"))
+#! -------------------------------------------------------------------------------------------------------------------------
 
-        self.delete("snake_segment") 
-        for i, segment in enumerate(self.snake):
-            if i == 0:
-                self.create_rectangle(segment[0], segment[1], segment[0] + 10, segment[1] + 10, fill="green", tags="snake_segment")
+    class SnakeTicker(GTG.Canvas):
+        def __init__(self, parent, bg="black", speed=5, **kwargs):
+            super().__init__(parent, bg=bg, bd=0, highlightthickness=0, **kwargs)
+            self.speed = speed
+            self.width = kwargs.get("width", 600) 
+            self.height = kwargs.get("height", 100)  
+            self.snake = []  
+            self.snake_length = 3
+            self.food_dots = []  
+            self.num_food_dots = 5  
+            self.snake_y = self.height // 2 
+            self._setup_snake()
+            self._setup_food_dots()
+            self.move_snake()
+
+        def _setup_snake(self):
+        
+            for i in range(self.snake_length):
+                x = 50 - i * 10  
+                y = self.snake_y
+                segment = self.create_rectangle(x, y, x + 10, y + 10, fill="green")
+                self.snake.append(segment)
+
+        def _setup_food_dots(self):
+            for _ in range(self.num_food_dots):
+                self.add_food_dot()
+
+        def add_food_dot(self):
+            x = random.randint(0, self.width - 10)
+            y = self.snake_y 
+            food = self.create_oval(x, y, x + 10, y + 10, fill="red")
+            self.food_dots.append(food)
+
+        def move_snake(self):
+            head = self.snake[0]
+            head_coords = self.coords(head)
+            new_head = self.create_rectangle(
+                head_coords[0] + self.speed, head_coords[1],
+                head_coords[2] + self.speed, head_coords[3],
+                fill="green"
+            )
+            self.snake.insert(0, new_head)  
+
+            for food in self.food_dots[:]: 
+                food_coords = self.coords(food)
+                if self.check_collision(head_coords, food_coords):
+                    self.snake_length += 1  
+                    self.food_dots.remove(food) 
+                    self.delete(food)  
+                    self.add_food_dot()  
+                    break  
+
+            if len(self.snake) > self.snake_length:
+                tail = self.snake.pop()
+                self.delete(tail)
+
+            if head_coords[0] > self.width:
+                self.reset_snake()
+
+            self.after(50, self.move_snake)
+
+        def check_collision(self, coords1, coords2):
+            return (
+                coords1[0] < coords2[2] and
+                coords1[2] > coords2[0] and
+                coords1[1] < coords2[3] and
+                coords1[3] > coords2[1]
+            )
+
+        def reset_snake(self):
+            for segment in self.snake:
+                self.delete(segment)
+            self.snake = []
+            self.snake_length = 3
+            self._setup_snake()
+
+            for food in self.food_dots:
+                self.delete(food)
+            self.food_dots = []
+            self._setup_food_dots() 
+
+        #! Example label with the snakeTicker
+            # self.ticker = SnakeTicker(
+            #     self.gen_frame, 
+            #     bg="black", 
+            #     speed=5, 
+            #     width=600, 
+            #     height=100
+            # )
+            # self.ticker.pack(pady=10, fill="x") 
+
+#! -------------------------------------------------------------------------------------------------------------------------
+
+    class MiniSnakeGame(GTG.Canvas):
+        def __init__(self, parent, bg="black", width=400, height=300, **kwargs):
+            super().__init__(parent, bg=bg, width=width, height=height, **kwargs)
+            self.width = width
+            self.height = height
+            self.snake = [(100, 100), (90, 100), (80, 100)]  
+            self.direction = "Right" 
+            self.food = self.create_food()  
+            self.score = 0
+            self.game_over = False
+            self.bind_controls()
+            self.update_game()
+
+        def bind_controls(self):
+            self.bind_all("<Left>", lambda event: self.set_direction("Left"))
+            self.bind_all("<Right>", lambda event: self.set_direction("Right"))
+            self.bind_all("<Up>", lambda event: self.set_direction("Up"))
+            self.bind_all("<Down>", lambda event: self.set_direction("Down"))
+
+        def set_direction(self, direction):
+            if (direction == "Left" and self.direction != "Right" or
+                direction == "Right" and self.direction != "Left" or
+                direction == "Up" and self.direction != "Down" or
+                direction == "Down" and self.direction != "Up"):
+                self.direction = direction
+
+        def create_food(self):
+            x = random.randint(0, (self.width - 10) // 10) * 10
+            y = random.randint(0, (self.height - 10) // 10) * 10
+            return self.create_oval(x, y, x + 10, y + 10, fill="red")
+
+        def move_snake(self):
+            if self.game_over:
+                return
+            head_x, head_y = self.snake[0]
+            if self.direction == "Left":
+                new_head = (head_x - 10, head_y)
+            elif self.direction == "Right":
+                new_head = (head_x + 10, head_y)
+            elif self.direction == "Up":
+                new_head = (head_x, head_y - 10)
+            elif self.direction == "Down":
+                new_head = (head_x, head_y + 10)
+
+            if (new_head in self.snake or
+                new_head[0] < 0 or new_head[0] >= self.width or
+                new_head[1] < 0 or new_head[1] >= self.height):
+                self.game_over = True
+                self.display_game_over()
+                
+                return
+
+            self.snake.insert(0, new_head)
+
+            if self.coords(self.food) == [new_head[0], new_head[1], new_head[0] + 10, new_head[1] + 10]:
+                self.score += 1
+                self.delete(self.food)
+                self.food = self.create_food()
             else:
-                self.create_oval(segment[0], segment[1], segment[0] + 10, segment[1] + 10, fill="green", tags="snake_segment")
+                tail = self.snake.pop()
+                self.delete(self.find_withtag("snake_segment"))
 
-        self.after(100, self.move_snake)
+            self.delete("snake_segment") 
+            for i, segment in enumerate(self.snake):
+                if i == 0:
+                    self.create_rectangle(segment[0], segment[1], segment[0] + 10, segment[1] + 10, fill="green", tags="snake_segment")
+                else:
+                    self.create_oval(segment[0], segment[1], segment[0] + 10, segment[1] + 10, fill="green", tags="snake_segment")
 
-    def display_game_over(self):
-        self.create_text(
-            self.width // 2, self.height // 2 - 20,
-            text=f"Game Over! Score: {self.score}",
-            fill="white",
-            font=("Arial", 20),
-            tags="game_over"
-        )
-        self.restart_button = GTG.Button(
-            self, text="Restart", command=self.reset_game,
-            bg="white", fg="black", font=("Arial", 14)
-        )
-        self.create_window(self.width // 2, self.height // 2 + 40, window=self.restart_button, tags="restart_button")
+            self.after(100, self.move_snake)
 
-    def reset_game(self):
-        self.delete("all") 
-        self.snake = [(100, 100), (90, 100), (80, 100)] 
-        self.direction = "Right"
-        self.food = self.create_food()
-        self.score = 0 
-        self.game_over = False  
-        self.update_game() 
+        def display_game_over(self):
+            self.create_text(
+                self.width // 2, self.height // 2 - 20,
+                text=f"Game Over! Score: {self.score}",
+                fill="red",
+                font=("Arial", 20),
+                tags="game_over"
+            )
+            self.restart_button = GTG.Button(
+                self, text="Restart", command=self.reset_game,
+                bg="white", fg="black", font=("Arial", 14)
+            )
+            self.create_window(self.width // 2, self.height // 2 + 45, window=self.restart_button, tags="restart_button")
 
-    def update_game(self):
-        self.move_snake()
+        def reset_game(self):
+            self.delete("all") 
+            self.snake = [(100, 100), (90, 100), (80, 100)] 
+            self.direction = "Right"
+            self.food = self.create_food()
+            self.score = 0 
+            self.game_over = False  
+            self.update_game() 
+
+        def update_game(self):
+            self.move_snake() 
+
+#! --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    class imageSilder:
+        def __init__(self, root, x=0, y=0, width=400, height=300, image_paths=None, **kwargs):
+            self.root = root
+            self.x = x
+            self.y = y
+            self.width = width
+            self.height = height
+            self.image_paths = image_paths or []
+            self.image_iter = cycle(self.image_paths)
+            
+            self.carousel_frame = GTG.Frame(root, width=self.width, height=self.height + 50)  # Extra space for buttons
+            self.carousel_frame.place(x=self.x, y=self.y)
+            
+            self.image_display_frame = GTG.LabelFrame(self.carousel_frame, text="Image Display")
+            self.image_display_frame.pack(pady=10)
+            
+            self.image_label = GTG.Label(self.image_display_frame)
+            self.image_label.pack()
+            
+            self.prev_button = None
+            self.next_button = None
+            self._build()
+
+        def _build(self):
+            self.display_next_image()
+            self.create_navigation_buttons()
+
+        def display_next_image(self):
+            """Display the next image in the frame."""
+            if self.image_paths:
+                image_path = next(self.image_iter)
+                img = Image.open(image_path)
+                img = img.resize((self.width, self.height))
+                self.img_tk = ImageTk.PhotoImage(img)
+                self.image_label.config(image=self.img_tk)
+
+        def create_navigation_buttons(self):
+            """Create 'Previous' and 'Next' buttons for navigation."""
+            button_frame = GTG.Frame(self.carousel_frame)
+            button_frame.pack(pady=10)
+
+            self.prev_button = GTG.Button(
+                button_frame,
+                text="Previous",
+                command=self.show_previous_image
+            )
+            self.prev_button.pack(side=tk.LEFT, padx=10)
+
+            self.next_button = GTG.Button(
+                button_frame,
+                text="Next",
+                command=self.show_next_image
+            )
+            self.next_button.pack(side=tk.RIGHT, padx=10)
+
+        def show_previous_image(self):
+            """Show the previous image."""
+            self.image_iter = cycle(reversed(self.image_paths))
+            self.display_next_image()
+
+        def show_next_image(self):
+            """Show the next image"""
+            self.display_next_image() 
+
+# #! Example 
+# if __name__ == "__main__":
+#     root = tk.Tk()
+#     root.geometry("500x550")
+    
+#     image_paths = ["Assets/happykat.png", "Assets/emoji.png","Assets/icon_2.png"]  
+#     carousel = GT.imageSilder(root, x=50, y=50, width=400, height=300, image_paths=image_paths)
+
+#     root.mainloop()
+
+#! --------------------------------------------------------------------------------------------------------------------------------------------------
+
+    class Clock:
+        def __init__(self, root, x=0, y=0, width=200, height=150, bg="#282828", fg="#ffffff", font=("Helvetica", 24, "bold")):
+            self.root = root
+            self.x = x
+            self.y = y
+            self.width = width
+            self.height = height
+            self.bg = bg
+            self.fg = fg
+            self.font = font
+            self.is_24_hour = False  
+            self._build()
+
+        def _build(self):
+            self.frame = GTG.Frame(self.root, width=self.width, height=self.height, bg=self.bg, relief="solid", bd=2)
+            self.frame.place(x=self.x, y=self.y)
+
+            self.time_label = GTG.Label(self.frame, text="", fg=self.fg, bg=self.bg, font=self.font)
+            self.time_label.pack(expand=True)
+
+            self.time_format_var = GTG.StringVar(value="12-Hour")
+
+            self.format_12_hour = GTG.Radiobutton(
+                self.root, 
+                text="12-Hour", 
+                variable=self.time_format_var, 
+                value="12-Hour",
+                bg=self.bg, 
+                fg=self.fg, 
+                hover_bg="#404040", 
+                hover_fg="#ffffff",
+                command=self.update_time
+            )
+            self.format_12_hour.place(x=self.x + self.width + 50, y=self.y + self.height - 150)
+
+            self.format_24_hour = GTG.Radiobutton(
+                self.root, 
+                text="24-Hour", 
+                variable=self.time_format_var, 
+                value="24-Hour", 
+                bg=self.bg, 
+                fg=self.fg, 
+                hover_bg="#404040", 
+                hover_fg="#ffffff", 
+                command=self.update_time
+            )
+            self.format_24_hour.place(x=self.x + self.width + 50, y=self.y + self.height - 120)
+
+            self.update_time()
+
+        def update_time(self):
+            """Updates the time every second."""
+            selected_format = self.time_format_var.get()  # Get the selected format from the variable
+
+            if selected_format == "24-Hour":
+                current_time = strftime('%H:%M:%S')  # 24-hour format
+            else:
+                current_time = strftime('%I:%M:%S %p')  # 12-hour format with AM/PM
+
+            self.time_label.config(text=current_time)
+            self.time_label.after(1000, self.update_time)
+
+# #! Example 
+# root = tk.Tk()
+# root.title("Real Time Clock")
+# root.geometry("400x300")  # Set the window size
+# root.configure(bg="#282828")
+
+# clock = GT.Clock(root, x=50, y=50)
+
+# root.mainloop()
