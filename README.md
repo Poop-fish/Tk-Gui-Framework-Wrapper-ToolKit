@@ -12,7 +12,13 @@ Make sure you have the following installed:
 - pip install pygments
 - pip install pillow
 - pip install cryptography
-  
+- pip install psutil
+- pip install gputil
+- pip install pyautogui
+- pip install keyboard
+- pip install qrcode[pil]
+
+
 if you still having issues just copy all the import and ask ChatGPT or google them
 
 
