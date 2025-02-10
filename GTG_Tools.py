@@ -205,13 +205,13 @@ class PyExE:
         GTG.showinfo(self.root, title="About", message="ExeFileMaker v1.0\n Created by GamerTag") 
 
 #! Example
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.title("GExeFileMaker")
-    root.geometry("800x650")
-    app = PyExE(root)
+#if __name__ == "__main__":
+    #root = tk.Tk()
+    #root.title("GExeFileMaker")
+    #root.geometry("800x650")
+   # app = PyExE(root)
     
-    root.mainloop() 
+   # root.mainloop() 
 
 #! -----------------------------------------------------------------------------------------------------------------------------
 
