@@ -1,9 +1,9 @@
-from PyGTG.iterables.GTG_iterables import GTGenumerate
+from GTG_iterables import GTGenumerate
 from GTG_imports import *  
-from PyGTG.Widgets.GTG_Widgets import *
-from PyGTG.Widgets.GTG_Extended_Widgets import *
-from PyGTG.Modules.GTG_Random_Modules import GTG_Random
-from PyGTG.iterables.GTG_iterables import GTG_range
+from GTG_Widgets import *
+from GTG_Extended_Widgets import *
+from GTG_Random_Modules import GTG_Random
+from GTG_iterables import GTG_range
 
 #! ------------------------------------------------- Gui Tools -------------------------------------------------------------
 
