@@ -1,5 +1,5 @@
 from GTG_imports import * 
-from PyGTG.Widgets.GTG_Widgets import GTG , GTGDateTime
+from GTG_Widgets import GTG , GTGDateTime
 import math
 
 #! -------------------------------------------- Extended Widgets -----------------------------------------------------------------------------
