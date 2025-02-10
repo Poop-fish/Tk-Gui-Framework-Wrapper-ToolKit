@@ -752,7 +752,8 @@ class AutoClickerApp:
         self.status_label = GTG.Label(root, text="Status: Stopped")
         self.status_label.pack(pady=20)
 
-        self.info_label = GTG.Label(root, text="Press Start key multiple times to increase click speed.")
+        self.info_label = GTG.Label(root, text="""Press Your Start Key 
+        Keybind Multiply times to increase click speed""")
         self.info_label.pack(pady=5)
             
         self.info_label2 = GTG.Label(root, text="Right Click the Start/Stop Button then click a key to set a custom keybind")
