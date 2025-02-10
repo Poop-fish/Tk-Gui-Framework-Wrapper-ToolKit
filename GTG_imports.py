@@ -12,6 +12,7 @@ from tkinter import simpledialog
 from tkinter.simpledialog import askstring
 
 #! ------------------------------------
+
 from time import strftime
 
 # \\ Base imports \\ 
@@ -24,9 +25,18 @@ import colorsys
 
 import calendar
 
+import psutil
+
+import GPUtil
+
 import threading
 
+import subprocess
+
+import shutil
+
 import io
+
 #! ------------------------------------
 
 from datetime import datetime
@@ -49,7 +59,6 @@ import webbrowser
 
 from cryptography.fernet import Fernet
 
-import random
 
 import string
 
@@ -59,3 +68,12 @@ import os
 
 import hashlib
 
+from itertools import cycle
+ 
+import threading
+
+import pyautogui
+
+import keyboard
+
+import qrcode
