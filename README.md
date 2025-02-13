@@ -19,7 +19,7 @@ Make sure you have the following installed:
 - pip install qrcode[pil]
 
 
-if you still having issues just copy all the import and ask ChatGPT or google them
+if you still having issues just copy all the imports and ask ChatGPT or google them
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ from GTG_DateTime_Module import GTGDateTime
 - **widget_example_2.py**
 - **Example_Apps.py**
 - **Variable_Class_Example.py**
-- **Variable_Class_Example2.py**
+
 
 
 
